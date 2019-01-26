@@ -229,7 +229,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114136569879605904, guid: f74aa80b9895b9b42ad584957357eb7e, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: f74aa80b9895b9b42ad584957357eb7e, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1001 &791136577
@@ -419,56 +420,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 212854808177631742, guid: af166033854c42b44b6a0bbe43ac9c66,
-        type: 2}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 212854808177631742, guid: af166033854c42b44b6a0bbe43ac9c66,
-        type: 2}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 212854808177631742, guid: af166033854c42b44b6a0bbe43ac9c66,
-        type: 2}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114918572669617706, guid: af166033854c42b44b6a0bbe43ac9c66,
-        type: 2}
-      propertyPath: speed
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4076671956269782, guid: af166033854c42b44b6a0bbe43ac9c66, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4076671956269782, guid: af166033854c42b44b6a0bbe43ac9c66, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4076671956269782, guid: af166033854c42b44b6a0bbe43ac9c66, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4076671956269782, guid: af166033854c42b44b6a0bbe43ac9c66, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4076671956269782, guid: af166033854c42b44b6a0bbe43ac9c66, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 114918572669617706, guid: af166033854c42b44b6a0bbe43ac9c66,
-        type: 2}
-      propertyPath: navPoints.Array.data[2].x
-      value: -10
-      objectReference: {fileID: 0}
-    - target: {fileID: 114918572669617706, guid: af166033854c42b44b6a0bbe43ac9c66,
-        type: 2}
-      propertyPath: navPoints.Array.data[2].y
-      value: -10
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af166033854c42b44b6a0bbe43ac9c66, type: 2}
   m_IsPrefabAsset: 0
@@ -587,70 +538,3 @@ MonoBehaviour:
     pivotPointRoot: {fileID: 0}
     spreadOutCount: 1
   showGraphs: 1
---- !u!1 &2062124274 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1878117157166080, guid: af166033854c42b44b6a0bbe43ac9c66,
-    type: 2}
-  m_PrefabInternal: {fileID: 1368560030}
---- !u!114 &2062124280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2062124274}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 2
-  radius: 0.5
-  height: 0.01
-  repathRate: 0.5
-  canSearch: 1
-  canMove: 1
-  maxSpeed: 1
-  gravity: {x: 0, y: 0, z: 0}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  centerOffsetCompatibility: NaN
-  orientation: 1
-  enableRotation: 0
-  targetCompatibility: {fileID: 0}
-  maxAcceleration: 1000
-  rotationSpeed: 360
-  slowdownDistance: 0
-  pickNextWaypointDist: 2
-  endReachedDistance: 0.1
-  alwaysDrawGizmos: 0
-  slowWhenNotFacingTarget: 1
-  whenCloseToDestination: 0
-  constrainInsideGraph: 0
---- !u!114 &2062124281
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2062124274}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  drawGizmos: 1
-  detailedGizmos: 0
-  startEndModifier:
-    addPoints: 0
-    exactStartPoint: 3
-    exactEndPoint: 3
-    useRaycasting: 0
-    mask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    useGraphRaycasting: 0
-  traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  graphMask:
-    value: -1
