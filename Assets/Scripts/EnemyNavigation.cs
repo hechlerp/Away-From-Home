@@ -34,6 +34,9 @@ public class EnemyNavigation : MonoBehaviour {
     }
 	
 	void Update () {
+        if (stopped) {
+            return;
+        }
         if (traveling) {
             if (!hasPathed) {
                 seeker.StartPath(transform.position, new Vector3(destination.x, destination.y, 0), OnPathComplete);
