@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyDetection : MonoBehaviour {
 
-    GameObject objectToPursue;
+    public GameObject objectToPursue;
 	
 	void Start () {
         objectToPursue = null;
