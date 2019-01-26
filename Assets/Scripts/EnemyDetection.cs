@@ -23,7 +23,7 @@ public class EnemyDetection : MonoBehaviour {
         objectToPursue = detectedObject;
         EnemyNavigation en = GetComponent<EnemyNavigation>();
         en.stopMoving();
-        en.faceDetectedObject(detectedObject);
+        //en.faceDetectedObject(detectedObject);
 
     }
 }

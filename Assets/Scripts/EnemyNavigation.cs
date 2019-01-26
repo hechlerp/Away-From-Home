@@ -60,7 +60,8 @@ public class EnemyNavigation : MonoBehaviour {
             Vector3 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
             
             dir *= speed;
-            Debug.Log(dir);
+            int lightDirection = getDirection(dir);
+            GetComponentsInChildren<LineOfSightRotator>()[0].setRotation(lightDirection);
             //transform.position = Vector3.MoveTowards(transform.position, destination, step);
             // The commented line is equivalent to the one below, but the one that is used
             // is slightly faster since it does not have to calculate a square root
@@ -88,10 +89,25 @@ public class EnemyNavigation : MonoBehaviour {
         patrolling = false;
     }
 
-    public void faceDetectedObject(GameObject detectedObj) {
-        Vector2 detectedObjPos = new Vector2(detectedObj.transform.position.x, detectedObj.transform.position.y);
-        facePoint(detectedObjPos);
+    public int getDirection (Vector3 dir) {
+        float dirAngle = Mathf.Atan2(dir.x, dir.y);
+        float degDirAngle = Mathf.Rad2Deg * dirAngle;
+        Debug.Log(degDirAngle);
+        if (degDirAngle < 45 & degDirAngle >= -45) {
+            return 180;
+        } else if (degDirAngle >= 45 & degDirAngle < 135) {
+            return 90;
+        } else if (degDirAngle < -45 & degDirAngle >= -135) {
+            return 270;
+        } else {
+            return 0;
+        }
     }
+
+    //public void faceDetectedObject(GameObject detectedObj) {
+    //    Vector2 detectedObjPos = new Vector2(detectedObj.transform.position.x, detectedObj.transform.position.y);
+    //    facePoint(detectedObjPos);
+    //}
 
     public void stopMoving() {
         destination = new Vector2(transform.position.x, transform.position.y);
@@ -110,22 +126,15 @@ public class EnemyNavigation : MonoBehaviour {
         hasPathed = false;
     }
 
-    void moveToPoint() {
-        Vector2 positionIn2D = new Vector2(transform.position.x, transform.position.y);
-        transform.position = Vector2.MoveTowards(positionIn2D, destination, speed * Time.deltaTime);
-        facePoint(destination);
-    }
+    //void moveToPoint() {
+    //    Vector2 positionIn2D = new Vector2(transform.position.x, transform.position.y);
+    //    transform.position = Vector2.MoveTowards(positionIn2D, destination, speed * Time.deltaTime);
+    //    facePoint(destination);
+    //}
 
-    void facePoint(Vector2 point) {
-        Vector2 positionIn2D = new Vector2(transform.position.x, transform.position.y);
-        Vector2 dir = point - positionIn2D;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-    }
 
-    void stepRotation() {
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * turnspeed);
-    }
+
+
 
 
     
