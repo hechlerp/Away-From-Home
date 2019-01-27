@@ -255,6 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b02f33c506fb8784787f4b16443afe49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentWaypoint: 0
   hasPathed: 0
   traveling: 0
   speed: 3
@@ -2878,6 +2879,11 @@ Prefab:
     - target: {fileID: 1783029506211774, guid: c112114674f38854e9bf40e388a0899e, type: 2}
       propertyPath: m_Name
       value: Cat (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 212018542975284980, guid: c112114674f38854e9bf40e388a0899e,
+        type: 2}
+      propertyPath: m_FlipX
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c112114674f38854e9bf40e388a0899e, type: 2}
@@ -16402,6 +16408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b02f33c506fb8784787f4b16443afe49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentWaypoint: 0
   hasPathed: 0
   traveling: 0
   speed: 3

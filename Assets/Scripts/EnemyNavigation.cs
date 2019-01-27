@@ -5,7 +5,7 @@ using Pathfinding;
 
 public class EnemyNavigation : MonoBehaviour {
     Seeker seeker;
-    int currentWaypoint;
+    public int currentWaypoint;
     float nextWaypointDistance;
     public bool hasPathed;
     public Path path;
