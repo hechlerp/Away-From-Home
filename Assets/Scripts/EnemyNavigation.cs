@@ -95,7 +95,6 @@ public class EnemyNavigation : MonoBehaviour {
     public int getDirection (Vector3 dir) {
         float dirAngle = Mathf.Atan2(dir.x, dir.y);
         float degDirAngle = Mathf.Rad2Deg * dirAngle;
-        Debug.Log(degDirAngle);
         if (degDirAngle < 45 & degDirAngle >= -45) {
             return 180;
         } else if (degDirAngle >= 45 & degDirAngle < 135) {
