@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour {
             GameManager.instance.Win();
 //			Winning.SetActive (true);
 			Debug.Log ("Win");
-        }else if (col.name=="CatRange"){
+        }else if (col.name == "CatRange"){
             col.transform.parent.GetComponent<CatController>().Alarm();
 
         } else if (col.name == "Line of Sight") {
