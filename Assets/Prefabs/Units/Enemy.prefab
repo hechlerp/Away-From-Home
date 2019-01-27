@@ -60,6 +60,7 @@ GameObject:
   - component: {fileID: 212279298038043036}
   - component: {fileID: 114450760992596746}
   - component: {fileID: 60909233768567538}
+  - component: {fileID: 58309277992896452}
   m_Layer: 0
   m_Name: Line of Sight
   m_TagString: Untagged
@@ -117,8 +118,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1929645531149190}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.89, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 4, y: 4, z: 1}
   m_Children: []
   m_Father: {fileID: 4211730647442908}
   m_RootOrder: 0
@@ -129,15 +130,30 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1609317435011618}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -6, y: 7, z: 2.1057682}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children:
   - {fileID: 4021058464711128}
   - {fileID: 4211730647442908}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &58309277992896452
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1929645531149190}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.3
 --- !u!58 &58522986063470732
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -147,12 +163,12 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.1
+  m_Radius: 0.5
 --- !u!58 &58803805965761978
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -174,7 +190,7 @@ PolygonCollider2D:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1929645531149190}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -327,11 +343,11 @@ MonoBehaviour:
   traveling: 0
   speed: 3
   navPoints:
-  - {x: 1, y: 0}
-  - {x: -1, y: 0}
-  - {x: -10, y: -10}
-  - {x: -1, y: 0}
-  turnspeed: 0
+  - {x: -6, y: 10}
+  - {x: -6, y: 12}
+  - {x: -6, y: 10}
+  - {x: -6, y: 7.5}
+  searchTime: 30
 --- !u!212 &212279298038043036
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -367,8 +383,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: c519882b54f633e448559c91effe43ae, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 71812fb3df6213646b928bca84d53060, type: 3}
+  m_Color: {r: 1, g: 0.13679248, b: 0.13679248, a: 0.2784314}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -413,7 +429,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5cb41139c71621444a64c8de6c337f85, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 30670e54d79494b4e92eec2c48e7bb1e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
