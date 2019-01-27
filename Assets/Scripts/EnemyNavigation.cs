@@ -124,9 +124,11 @@ public class EnemyNavigation : MonoBehaviour {
     }
 
     public void inspectLocation(Vector2 location) {
-        Debug.Log("inspecting");
         destination = location;
+        Debug.Log(destination);
         alertState = "investigate";
+        traveling = true;
+        hasPathed = false;
     }
 
     public int getDirection(Vector3 dir) {
@@ -193,7 +195,7 @@ public class EnemyNavigation : MonoBehaviour {
     void createSearchPoints() {
         searchPoints = new Vector2[5];
         int[] directions = new int[5] { 0, 72, 144, 216, 288 };
-        float maxDist = 10;
+        float maxDist = 3;
         Vector2 position = getCurrentPos();
         int layerMask = LayerMask.GetMask("Obstacle");
         for (int i = 0; i < directions.Length; i++) {
@@ -206,8 +208,11 @@ public class EnemyNavigation : MonoBehaviour {
                 //searchPoints[i] = hit.point;
                 searchPoints[i] = new Vector2(transform.position.x, transform.position.y);
             } else {
-                searchPoints[i] = vectorDir * maxDist;
+                searchPoints[i] = position - (vectorDir * maxDist);
             }
+        }
+        foreach(Vector2 point in searchPoints) {
+            Debug.Log(point);
         }
         alertState = "search";
         StartCoroutine(returnToPatrolAfterTime(searchTime));
@@ -229,7 +234,7 @@ public class EnemyNavigation : MonoBehaviour {
         hasPathed = false;
     }
 
-    void returnToPatrol() {
+    public void returnToPatrol() {
         alertState = "patrol";
         searchPoints = null;
         traveling = false;
@@ -252,7 +257,7 @@ public class EnemyNavigation : MonoBehaviour {
             directionsChecked = 0;
         } else {
             losR.setRotation(90 * directionsChecked);
-            StartCoroutine(checkOtherDirections(2f));
+            StartCoroutine(checkOtherDirections(.5f));
         }
         
     }
