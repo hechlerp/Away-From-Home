@@ -24,6 +24,7 @@ public class EnemyNavigation : MonoBehaviour {
     bool searchedAreaComplete;
     bool lookingAround;
     int directionsChecked;
+    Animator anim;
 
     void Start() {
         alertState = "patrol";
@@ -38,6 +39,7 @@ public class EnemyNavigation : MonoBehaviour {
         searchedAreaComplete = false;
         lookingAround = false;
         directionsChecked = 0;
+        anim = GetComponent<Animator>();
     }
 
     void Update() {
@@ -122,6 +124,7 @@ public class EnemyNavigation : MonoBehaviour {
     }
 
     public void inspectLocation(Vector2 location) {
+        Debug.Log("inspecting");
         destination = location;
         alertState = "investigate";
     }
@@ -130,12 +133,37 @@ public class EnemyNavigation : MonoBehaviour {
         float dirAngle = Mathf.Atan2(dir.x, dir.y);
         float degDirAngle = Mathf.Rad2Deg * dirAngle;
         if (degDirAngle < 45 & degDirAngle >= -45) {
+            // left
+            anim.SetBool("WalkFront", true);
+            anim.SetBool("WalkRight", false);
+            anim.SetBool("WalkBack", false);
+            anim.SetBool("WalkLeft", false);
             return 180;
         } else if (degDirAngle >= 45 & degDirAngle < 135) {
+            // front
+
+            anim.SetBool("WalkLeft", true);
+            anim.SetBool("WalkFront", false);
+            anim.SetBool("WalkBack", false);
+            anim.SetBool("WalkRight", false);
+
             return 90;
         } else if (degDirAngle < -45 & degDirAngle >= -135) {
+            //right
+
+            anim.SetBool("WalkBack", false);
+            anim.SetBool("WalkLeft", false);
+            anim.SetBool("WalkFront", false);
+            anim.SetBool("WalkRight", true);
+
             return 270;
         } else {
+            // back
+            anim.SetBool("WalkRight", false);
+            anim.SetBool("WalkLeft", false);
+            anim.SetBool("WalkFront", false);
+            anim.SetBool("WalkBack", true);
+
             return 0;
         }
     }
