@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class EnemyDetectionCollider : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D objectCollider) {
-        GetComponentInParent<EnemyDetection>().detectObject(objectCollider.gameObject);
+        if (objectCollider.gameObject.tag == "Player") {
+            GetComponentInParent<EnemyDetection>().detectObject(objectCollider.gameObject);
+        }
+    }
+    void OnTriggerExit2D(Collider2D objectCollider) {
+        if (objectCollider.gameObject.tag == "Player") {
+            GetComponentInParent<EnemyDetection>().stopCheckingDetection();
+        }
     }
 }

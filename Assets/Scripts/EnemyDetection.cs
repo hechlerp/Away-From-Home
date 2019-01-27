@@ -5,13 +5,23 @@ using UnityEngine;
 public class EnemyDetection : MonoBehaviour {
 
     public GameObject objectToPursue;
+    bool checkDetection;
 	
 	void Start () {
         objectToPursue = null;
+        checkDetection = false;
 	}
 	
 	void Update () {
-		
+		if (checkDetection & objectToPursue) {
+            int layerMask = LayerMask.GetMask("Obstacle");
+            RaycastHit2D hit;
+            if (!Physics2D.Linecast(transform.position, objectToPursue.transform.position, layerMask)) {
+                GameManager.instance.Fail();
+                GetComponent<EnemyNavigation>().enabled = false;
+                GetComponent<Pathfinding.AIPath>().enabled = false;
+            }
+        }
 	}
 
     public void pursueObject(GameObject detectedObj) {
@@ -20,9 +30,21 @@ public class EnemyDetection : MonoBehaviour {
     }
 
     public void detectObject(GameObject detectedObject) {
+        Debug.Log("detecting");
         objectToPursue = detectedObject;
-        EnemyNavigation en = GetComponent<EnemyNavigation>();
-        en.stopMoving();
+        //EnemyNavigation en = GetComponent<EnemyNavigation>();
+        //en.stopMoving();
+        startCheckingDetection();
 
+    }
+
+    void startCheckingDetection() {
+        checkDetection = true;
+    }
+
+    public void stopCheckingDetection() {
+        Debug.Log("stop checking");
+        checkDetection = false;
+        objectToPursue = null;
     }
 }
