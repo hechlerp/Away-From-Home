@@ -61,6 +61,7 @@ public class CatController : MonoBehaviour {
                 waiting = false;
                 GetComponent<Pathfinding.AIPath>().enabled = true;
                 GetComponent<EnemyNavigation>().enabled = true;
+                GetComponent<EnemyNavigation>().returnToPatrol();
             }
         }
 	}
