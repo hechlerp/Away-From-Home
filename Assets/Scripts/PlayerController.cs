@@ -8,7 +8,23 @@ public class PlayerController : MonoBehaviour {
 
     public static PlayerController instance;
 	public GameObject Winning;
+    Animator anim;
 
+    void setAnimation(string animationName) {
+        string[] names = new string[4];
+        names[0] = "WalkFront";
+        names[1] = "WalkBack";
+        names[2] = "WalkLeft";
+        names[3] = "WalkRight";
+        foreach (string animation in names) {
+            if (animation == animationName) {
+                anim.SetBool(animation, true);
+            } else {
+                anim.SetBool(animation, false);
+            }
+            
+        }
+    }
 
     void OnTriggerEnter2D(Collider2D col){
         Debug.Log(col.name);
@@ -47,6 +63,8 @@ public class PlayerController : MonoBehaviour {
         instance = this;
         WoodSound = Resources.Load("Wood", typeof(AudioClip)) as AudioClip;
         GrassSound = Resources.Load("Grass", typeof(AudioClip)) as AudioClip;
+        anim = GetComponent<Animator>();
+
     }
     AudioClip WoodSound;
     AudioClip GrassSound;
@@ -82,33 +100,40 @@ public class PlayerController : MonoBehaviour {
         float TranslateAmount = m_speed * Time.deltaTime;
 
         if (Input.GetKey(KeyCode.W)|| Input.GetKey((KeyCode.S))){
-            if (Input.GetKey((KeyCode.S))|| Input.GetKey((KeyCode.D))){
+            if (Input.GetKey((KeyCode.A))|| Input.GetKey((KeyCode.D))){
                 TranslateAmount /= 1.41f;
 
             }
         }
 
+        string animationName = "";
 
 		if (Input.GetKey(KeyCode.W)|Input.GetKey(KeyCode.UpArrow)) //前
 		{
+            animationName = "WalkBack";
             this.transform.Translate(Vector3.up*TranslateAmount); 
             clicked = true;
 		}
 		if (Input.GetKey(KeyCode.S) | Input.GetKey(KeyCode.DownArrow)) //后
 		{
+            animationName = "WalkFront";
             this.transform.Translate(Vector3.up *- TranslateAmount); 
             clicked = true;
 		}
 		if (Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.LeftArrow)) //左
 		{
+            animationName = "WalkLeft";
             this.transform.Translate(Vector3.right *-TranslateAmount); 
             clicked = true;
 		}
 		if (Input.GetKey(KeyCode.D) | Input.GetKey(KeyCode.RightArrow)) //右
 		{
+            animationName = "WalkRight";
             this.transform.Translate(Vector3.right * TranslateAmount);
             clicked = true;
         }
+
+        setAnimation(animationName);
 
         if (clicked) return true;
         return false;
