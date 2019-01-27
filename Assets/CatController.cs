@@ -5,9 +5,11 @@ using UnityEngine;
 public class CatController : MonoBehaviour {
     bool idle = false;
     Transform folder;
+    Animator anm;
 
     //state:roaming, staying in the spot
     public void Alarm(){
+        anm.Play("catsidle");
         if (waveexpanding) return;
         waiting = true;
         wave.gameObject.SetActive(true);
@@ -36,6 +38,8 @@ public class CatController : MonoBehaviour {
 
 
     void Start () {
+        anm = GetComponent<Animator>();
+        anm.Play("catswalk");
         folder = GameObject.Find("EnemyHolder").transform;
 	}
 
@@ -43,6 +47,8 @@ public class CatController : MonoBehaviour {
     bool waiting = false;
 	// Update is called once per frame
 	void Update () {
+//        Vector3 pos = GetComponent<EnemyNavigation>().
+
         if (waveexpanding){
             wave.localScale *= 1.1f;
             if (wave.localScale.x>=50){
@@ -57,6 +63,7 @@ public class CatController : MonoBehaviour {
             elapsed += Time.deltaTime;
             if (elapsed > 2)
             {
+                anm.Play("catswalk");
                 elapsed = 0;
                 waiting = false;
                 GetComponent<Pathfinding.AIPath>().enabled = true;
