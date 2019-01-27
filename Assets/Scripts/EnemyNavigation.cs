@@ -133,19 +133,24 @@ public class EnemyNavigation : MonoBehaviour {
         float dirAngle = Mathf.Atan2(dir.x, dir.y);
         float degDirAngle = Mathf.Rad2Deg * dirAngle;
         if (degDirAngle < 45 & degDirAngle >= -45) {
-            anim.SetBool("WalkFront", false);
+            // left
+            anim.SetBool("WalkFront", true);
             anim.SetBool("WalkRight", false);
             anim.SetBool("WalkBack", false);
-            anim.SetBool("WalkLeft", true);
+            anim.SetBool("WalkLeft", false);
             return 180;
         } else if (degDirAngle >= 45 & degDirAngle < 135) {
-            anim.SetBool("WalkLeft", false);
-            anim.SetBool("WalkFront", true);
+            // front
+
+            anim.SetBool("WalkLeft", true);
+            anim.SetBool("WalkFront", false);
             anim.SetBool("WalkBack", false);
             anim.SetBool("WalkRight", false);
 
             return 90;
         } else if (degDirAngle < -45 & degDirAngle >= -135) {
+            //right
+
             anim.SetBool("WalkBack", false);
             anim.SetBool("WalkLeft", false);
             anim.SetBool("WalkFront", false);
@@ -153,6 +158,7 @@ public class EnemyNavigation : MonoBehaviour {
 
             return 270;
         } else {
+            // back
             anim.SetBool("WalkRight", false);
             anim.SetBool("WalkLeft", false);
             anim.SetBool("WalkFront", false);
