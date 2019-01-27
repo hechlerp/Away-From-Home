@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class SpawnTimer : MonoBehaviour {
 
-    // Use this for initialization
     void Start() {
-        StartCoroutine(spawnFirstParent(3));
-        StartCoroutine(spawnSecondParent(6));
+        //StartCoroutine(spawnFirstParent(3));
+        //StartCoroutine(spawnSecondParent(6));
     }
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     IEnumerator spawnFirstParent(float time) {
         yield return new WaitForSeconds(time);

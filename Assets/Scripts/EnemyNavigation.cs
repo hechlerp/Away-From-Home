@@ -14,14 +14,15 @@ public class EnemyNavigation : MonoBehaviour {
 
     public Vector2[] navPoints;
     int currentPointIndex = 0;
-    bool patrolling;
-    Vector2 destination;
+    int searchPointIndex = 0;
+    public string alertState;
+    public Vector2 destination;
     bool stopped;
-    public float turnspeed;
     Quaternion targetRotation;
+    Vector2[] searchPoints;
 
-	void Start () {
-        patrolling = true;
+    void Start() {
+        //alertState = "patrolling";
         stopped = false;
         destination = navPoints[0];
         targetRotation = transform.rotation;
@@ -32,8 +33,8 @@ public class EnemyNavigation : MonoBehaviour {
         traveling = true;
         GetComponent<AIPath>().maxSpeed = speed;
     }
-	
-	void Update () {
+
+    void Update() {
         if (stopped) {
             return;
         }
@@ -47,7 +48,21 @@ public class EnemyNavigation : MonoBehaviour {
             }
 
         } else if (!stopped) {
-            goToNextPoint();
+            switch (alertState) {
+                case "patrolling":
+                    goToNextPoint();
+                    break;
+
+                case "investigate":
+                    if (searchPoints == null) {
+                        createSearchPoints();
+                    }
+                    break;
+
+                case "search":
+                    goToNextSearchPoint();
+                    break;
+            }
         }
         if (path == null) {
             // We have no path to follow yet, so don't do anything
@@ -61,7 +76,7 @@ public class EnemyNavigation : MonoBehaviour {
         // Direction to the next waypoint
         if (path != null) {
             Vector3 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
-            
+
             dir *= speed;
             int lightDirection = getDirection(dir);
             GetComponentsInChildren<LineOfSightRotator>()[0].setRotation(lightDirection);
@@ -86,13 +101,13 @@ public class EnemyNavigation : MonoBehaviour {
         path = p;
         currentWaypoint = 0;
     }
-    
+
     public void inspectLocation(Vector2 location) {
         destination = location;
-        patrolling = false;
+        alertState = "investigate";
     }
 
-    public int getDirection (Vector3 dir) {
+    public int getDirection(Vector3 dir) {
         float dirAngle = Mathf.Atan2(dir.x, dir.y);
         float degDirAngle = Mathf.Rad2Deg * dirAngle;
         if (degDirAngle < 45 & degDirAngle >= -45) {
@@ -113,17 +128,55 @@ public class EnemyNavigation : MonoBehaviour {
 
     public void stopMoving() {
         destination = new Vector2(transform.position.x, transform.position.y);
-        patrolling = false;
+        alertState = "detecting";
         stopped = true;
         traveling = false;
     }
 
-    void goToNextPoint () {
+    void goToNextPoint() {
         currentPointIndex++;
         if (currentPointIndex == navPoints.Length) {
             currentPointIndex = 0;
         }
         destination = navPoints[currentPointIndex];
+        traveling = true;
+        hasPathed = false;
+    }
+
+    void createSearchPoints() {
+        searchPoints = new Vector2[5];
+        int[] directions = new int[5] { 0, 72, 144, 216, 288 };
+        float maxDist = 10;
+        Vector2 position = getCurrentPos();
+        int layerMask = LayerMask.GetMask("Obstacle");
+        for (int i = 0; i < directions.Length; i++) {
+            int direction = directions[i];
+            float radDir = direction * Mathf.Deg2Rad;
+            Vector2 vectorDir = new Vector2(Mathf.Cos(radDir), Mathf.Sin(radDir));
+            RaycastHit2D hit = Physics2D.Raycast(position, vectorDir, maxDist, layerMask);
+            if (hit.collider != null) {
+                Vector3 extents = transform.GetComponent<SpriteRenderer>().sprite.bounds.extents;
+                searchPoints[i] = hit.point;
+            } else {
+                searchPoints[i] = vectorDir * maxDist;
+            }
+        }
+        alertState = "search";
+    }
+
+    void OnTriggerEnter(Collider other) {
+        Debug.Log(other);
+        if (alertState == "search") {
+            goToNextSearchPoint();
+        }
+    }
+
+    void goToNextSearchPoint() {
+        searchPointIndex++;
+        if (searchPointIndex == searchPoints.Length) {
+            searchPointIndex = 0;
+        }
+        destination = searchPoints[searchPointIndex];
         traveling = true;
         hasPathed = false;
     }
