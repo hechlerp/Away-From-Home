@@ -21,6 +21,9 @@ public class EnemyNavigation : MonoBehaviour {
     Quaternion targetRotation;
     Vector2[] searchPoints;
     public float searchTime;
+    bool searchedAreaComplete;
+    bool lookingAround;
+    int directionsChecked;
 
     void Start() {
         alertState = "patrol";
@@ -32,7 +35,9 @@ public class EnemyNavigation : MonoBehaviour {
         seeker = GetComponent<Seeker>();
         traveling = true;
         GetComponent<AIPath>().maxSpeed = speed;
-
+        searchedAreaComplete = false;
+        lookingAround = false;
+        directionsChecked = 0;
     }
 
     void Update() {
@@ -52,6 +57,8 @@ public class EnemyNavigation : MonoBehaviour {
             switch (alertState) {
                 case "patrol":
                     goToNextPoint();
+                    lookingAround = false;
+                    searchedAreaComplete = false;
                     break;
 
                 case "investigate":
@@ -62,7 +69,13 @@ public class EnemyNavigation : MonoBehaviour {
                     break;
 
                 case "search":
-                    goToNextSearchPoint();
+                    if (!searchedAreaComplete & !lookingAround) {
+                        Debug.Log("look around");
+                        lookAround();
+                    } else if (!lookingAround) {
+                        goToNextSearchPoint();
+                        searchedAreaComplete = false;
+                    }
                     break;
             }
         }
@@ -80,10 +93,12 @@ public class EnemyNavigation : MonoBehaviour {
             Vector3 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
 
             dir *= speed;
-            int lightDirection = getDirection(dir);
-            LineOfSightRotator loSR = GetComponentInChildren<LineOfSightRotator>();
-            if (loSR != null) {
-                loSR.setRotation(lightDirection);
+            if (!lookingAround) {
+                int lightDirection = getDirection(dir);
+                LineOfSightRotator loSR = GetComponentInChildren<LineOfSightRotator>();
+                if (loSR != null) {
+                    loSR.setRotation(lightDirection);
+                }
             }
             // The commented line is equivalent to the one below, but the one that is used
             // is slightly faster since it does not have to calculate a square root
@@ -109,7 +124,6 @@ public class EnemyNavigation : MonoBehaviour {
     public void inspectLocation(Vector2 location) {
         destination = location;
         alertState = "investigate";
-        Debug.Log("thing");
     }
 
     public int getDirection(Vector3 dir) {
@@ -172,7 +186,6 @@ public class EnemyNavigation : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
-        Debug.Log(other);
         if (alertState == "search") {
             goToNextSearchPoint();
         }
@@ -190,7 +203,6 @@ public class EnemyNavigation : MonoBehaviour {
 
     void returnToPatrol() {
         alertState = "patrol";
-        Debug.Log("Back to work, you peasant");
         searchPoints = null;
         traveling = false;
     }
@@ -200,6 +212,26 @@ public class EnemyNavigation : MonoBehaviour {
     IEnumerator returnToPatrolAfterTime(float time) {
         yield return new WaitForSeconds(time);
         returnToPatrol();
+    }
+
+    void lookAround() {
+        LineOfSightRotator losR = GetComponentInChildren<LineOfSightRotator>();
+        lookingAround = true;
+        directionsChecked++;
+        if (directionsChecked > 4) {
+            searchedAreaComplete = true;
+            lookingAround = false;
+            directionsChecked = 0;
+        } else {
+            losR.setRotation(90 * directionsChecked);
+            StartCoroutine(checkOtherDirections(2f));
+        }
+        
+    }
+
+    IEnumerator checkOtherDirections(float time) {
+        yield return new WaitForSeconds(time);
+        lookAround();
     }
 
     //void moveToPoint() {
@@ -213,7 +245,7 @@ public class EnemyNavigation : MonoBehaviour {
 
 
 
-    
+
 
 
 }
