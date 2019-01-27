@@ -9,7 +9,7 @@ public class CatController : MonoBehaviour {
     //state:roaming, staying in the spot
     public void Alarm(){
         if (waveexpanding) return;
-
+        waiting = true;
         wave.gameObject.SetActive(true);
         waveexpanding = true;
         GetComponent<EnemyNavigation>().enabled = false;
@@ -34,74 +34,15 @@ public class CatController : MonoBehaviour {
     bool waveexpanding = false;
     public List<GameObject> InRangeParents = new List<GameObject>{};
 
-    /*
-
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (!InRangeParents.Contains((collision.gameObject))){
-            InRangeParents.Add((collision.gameObject));
-
-        }
-
-    }
-
-    private void OnTriggerExit2D(Collision2D collision)
-    {
-        if (InRangeParents.Contains((collision.gameObject)))
-        {
-            InRangeParents.Remove((collision.gameObject));
-
-        }
-
-    }
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (!InRangeParents.Contains((collision.gameObject)))
-        {
-            InRangeParents.Add((collision.gameObject));
-
-        }
-
-    }
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (!InRangeParents.Contains((collision.gameObject)))
-        {
-            InRangeParents.Add((collision.gameObject));
-
-        }
-
-    }
-    private void OnCollisionExit2D(Collider2D collision)
-    {
-        if (InRangeParents.Contains((collision.gameObject)))
-        {
-            InRangeParents.Remove((collision.gameObject));
-
-        }
-
-    }*/
 
     void Start () {
         folder = GameObject.Find("EnemyHolder").transform;
 	}
 
     float elapsed = 0;
+    bool waiting = false;
 	// Update is called once per frame
 	void Update () {
-        /*
-        for (int i = 0; i < folder.childCount; i++)
-        {
-//            Debug.Log(Vector3.Distance(transform.position, folder.GetChild(i).position));
-            if (Vector3.Distance(transform.position, folder.GetChild(i).position) < 50)
-            {
-                //Alarm();
-                folder.GetChild(i).GetComponent<EnemyNavigation>().inspectLocation(transform.position);
-
-            }
-        }*/
-
         if (waveexpanding){
             wave.localScale *= 1.1f;
             if (wave.localScale.x>=50){
@@ -111,10 +52,16 @@ public class CatController : MonoBehaviour {
 
             }
         }
-        elapsed += Time.deltaTime;
-        if (elapsed > 2){
-            elapsed = 0;
-            GetComponent<EnemyNavigation>().enabled=false;
+        if (waiting)
+        {
+            elapsed += Time.deltaTime;
+            if (elapsed > 2)
+            {
+                elapsed = 0;
+                waiting = false;
+                GetComponent<Pathfinding.AIPath>().enabled = true;
+                GetComponent<EnemyNavigation>().enabled = true;
+            }
         }
 	}
 }
