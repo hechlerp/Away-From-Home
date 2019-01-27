@@ -23,7 +23,7 @@ public class CatController : MonoBehaviour {
             if (Vector3.Distance(transform.position, folder.GetChild(i).position) < 15)
             {
                 //Alarm();
-                folder.GetChild(i).GetComponent<EnemyNavigation>().inspectLocation(transform.position);
+                folder.GetChild(i).GetComponent<EnemyNavigation>().inspectLocation(new Vector2(transform.position.x,transform.position.y));
 
             }
         }
