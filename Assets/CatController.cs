@@ -4,25 +4,39 @@ using UnityEngine;
 
 public class CatController : MonoBehaviour {
     bool idle = false;
+    Transform folder;
+
     //state:roaming, staying in the spot
     public void Alarm(){
         if (waveexpanding) return;
 
         wave.gameObject.SetActive(true);
         waveexpanding = true;
-        Debug.Log(("scream"));
         GetComponent<EnemyNavigation>().enabled = false;
         GetComponent<Pathfinding.AIPath>().enabled=false;
-        foreach(GameObject x in InRangeParents){
-            x.GetComponent<EnemyNavigation>().inspectLocation(transform.position);
+        //  calling = true;
 
-        }
         //        GetComponent<Animator>().Play("Scream");
+        for (int i = 0; i < folder.childCount; i++)
+        {
+            //            Debug.Log(Vector3.Distance(transform.position, folder.GetChild(i).position));
+            if (Vector3.Distance(transform.position, folder.GetChild(i).position) < 15)
+            {
+                //Alarm();
+                folder.GetChild(i).GetComponent<EnemyNavigation>().inspectLocation(transform.position);
 
+            }
+        }
     }
+
+//    bool calling = false;
     public Transform wave;
     bool waveexpanding = false;
-    List<GameObject> InRangeParents = new List<GameObject>();
+    public List<GameObject> InRangeParents = new List<GameObject>{};
+
+    /*
+
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (!InRangeParents.Contains((collision.gameObject))){
@@ -30,7 +44,9 @@ public class CatController : MonoBehaviour {
 
         }
 
-    }private void OnTriggerExit2D(Collider2D collision)
+    }
+
+    private void OnTriggerExit2D(Collision2D collision)
     {
         if (InRangeParents.Contains((collision.gameObject)))
         {
@@ -39,13 +55,53 @@ public class CatController : MonoBehaviour {
         }
 
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!InRangeParents.Contains((collision.gameObject)))
+        {
+            InRangeParents.Add((collision.gameObject));
+
+        }
+
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (!InRangeParents.Contains((collision.gameObject)))
+        {
+            InRangeParents.Add((collision.gameObject));
+
+        }
+
+    }
+    private void OnCollisionExit2D(Collider2D collision)
+    {
+        if (InRangeParents.Contains((collision.gameObject)))
+        {
+            InRangeParents.Remove((collision.gameObject));
+
+        }
+
+    }*/
+
     void Start () {
-		
+        folder = GameObject.Find("EnemyHolder").transform;
 	}
 
     float elapsed = 0;
 	// Update is called once per frame
 	void Update () {
+        /*
+        for (int i = 0; i < folder.childCount; i++)
+        {
+//            Debug.Log(Vector3.Distance(transform.position, folder.GetChild(i).position));
+            if (Vector3.Distance(transform.position, folder.GetChild(i).position) < 50)
+            {
+                //Alarm();
+                folder.GetChild(i).GetComponent<EnemyNavigation>().inspectLocation(transform.position);
+
+            }
+        }*/
+
         if (waveexpanding){
             wave.localScale *= 1.1f;
             if (wave.localScale.x>=50){
