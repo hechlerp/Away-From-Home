@@ -15,14 +15,15 @@ public class EnemyNavigation : MonoBehaviour {
     public Vector2[] navPoints;
     int currentPointIndex = 0;
     int searchPointIndex = 0;
-    public string alertState;
-    public Vector2 destination;
+    string alertState;
+    Vector2 destination;
     bool stopped;
     Quaternion targetRotation;
     Vector2[] searchPoints;
+    public float searchTime;
 
     void Start() {
-        //alertState = "patrolling";
+        alertState = "patrol";
         stopped = false;
         destination = navPoints[0];
         currentWaypoint = 0;
@@ -49,14 +50,13 @@ public class EnemyNavigation : MonoBehaviour {
 
         } else if (!stopped) {
             switch (alertState) {
-                case "patrolling":
+                case "patrol":
                     goToNextPoint();
                     break;
 
                 case "investigate":
                     if (searchPoints == null) {
                         targetRotation = transform.rotation;
-
                         createSearchPoints();
                     }
                     break;
@@ -81,7 +81,10 @@ public class EnemyNavigation : MonoBehaviour {
 
             dir *= speed;
             int lightDirection = getDirection(dir);
-            GetComponentsInChildren<LineOfSightRotator>()[0].setRotation(lightDirection);
+            LineOfSightRotator loSR = GetComponentInChildren<LineOfSightRotator>();
+            if (loSR != null) {
+                loSR.setRotation(lightDirection);
+            }
             // The commented line is equivalent to the one below, but the one that is used
             // is slightly faster since it does not have to calculate a square root
             //if (Vector3.Distance (transform.position,path.vectorPath[currentWaypoint]) < nextWaypointDistance) {
@@ -106,6 +109,7 @@ public class EnemyNavigation : MonoBehaviour {
     public void inspectLocation(Vector2 location) {
         destination = location;
         alertState = "investigate";
+        Debug.Log("thing");
     }
 
     public int getDirection(Vector3 dir) {
@@ -157,12 +161,14 @@ public class EnemyNavigation : MonoBehaviour {
             RaycastHit2D hit = Physics2D.Raycast(position, vectorDir, maxDist, layerMask);
             if (hit.collider != null) {
                 Vector3 extents = transform.GetComponent<SpriteRenderer>().sprite.bounds.extents;
-                searchPoints[i] = hit.point;
+                //searchPoints[i] = hit.point;
+                searchPoints[i] = new Vector2(transform.position.x, transform.position.y);
             } else {
                 searchPoints[i] = vectorDir * maxDist;
             }
         }
         alertState = "search";
+        StartCoroutine(returnToPatrolAfterTime(searchTime));
     }
 
     void OnTriggerEnter(Collider other) {
@@ -180,6 +186,20 @@ public class EnemyNavigation : MonoBehaviour {
         destination = searchPoints[searchPointIndex];
         traveling = true;
         hasPathed = false;
+    }
+
+    void returnToPatrol() {
+        alertState = "patrol";
+        Debug.Log("Back to work, you peasant");
+        searchPoints = null;
+        traveling = false;
+    }
+
+
+
+    IEnumerator returnToPatrolAfterTime(float time) {
+        yield return new WaitForSeconds(time);
+        returnToPatrol();
     }
 
     //void moveToPoint() {
