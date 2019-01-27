@@ -832,6 +832,10 @@ Prefab:
       propertyPath: m_BackGroundColor.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1688849208579348, guid: ee1da48a07bdf1c499fcd92bd433f4ac, type: 2}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee1da48a07bdf1c499fcd92bd433f4ac, type: 2}
   m_IsPrefabAsset: 0

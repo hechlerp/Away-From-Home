@@ -21,12 +21,9 @@ public class PlayerController : MonoBehaviour {
             col.transform.parent.GetComponent<CatController>().Alarm();
 
         } else if (col.name == "Line of Sight") {
-            GameManager.instance.Fail();
-            col.transform.parent.GetComponent<EnemyNavigation>().enabled=false;
-            col.transform.parent.GetComponent<Pathfinding.AIPath>().enabled=false;
-		//	Debug.Log ("Parent Triggered");
+            //	Debug.Log ("Parent Triggered");
 
-		} else if (col.name == "Parent") {//it's a trigger of parent trigger area
+        } else if (col.name == "Parent") {//it's a trigger of parent trigger area
         }
         if (col.tag == "Wood")
         {
