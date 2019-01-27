@@ -25,13 +25,13 @@ public class EnemyNavigation : MonoBehaviour {
         //alertState = "patrolling";
         stopped = false;
         destination = navPoints[0];
-        targetRotation = transform.rotation;
         currentWaypoint = 0;
         nextWaypointDistance = 0;
         hasPathed = false;
         seeker = GetComponent<Seeker>();
         traveling = true;
         GetComponent<AIPath>().maxSpeed = speed;
+
     }
 
     void Update() {
@@ -55,6 +55,8 @@ public class EnemyNavigation : MonoBehaviour {
 
                 case "investigate":
                     if (searchPoints == null) {
+                        targetRotation = transform.rotation;
+
                         createSearchPoints();
                     }
                     break;
@@ -80,7 +82,6 @@ public class EnemyNavigation : MonoBehaviour {
             dir *= speed;
             int lightDirection = getDirection(dir);
             GetComponentsInChildren<LineOfSightRotator>()[0].setRotation(lightDirection);
-            //transform.position = Vector3.MoveTowards(transform.position, destination, step);
             // The commented line is equivalent to the one below, but the one that is used
             // is slightly faster since it does not have to calculate a square root
             //if (Vector3.Distance (transform.position,path.vectorPath[currentWaypoint]) < nextWaypointDistance) {
