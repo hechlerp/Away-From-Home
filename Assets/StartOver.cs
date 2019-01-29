@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StartOver : MonoBehaviour {
 
@@ -14,7 +15,7 @@ public class StartOver : MonoBehaviour {
         if (Input.GetKeyDown((KeyCode.Space))){
 
             //reset the scene
-            Application.LoadLevel("NancyMain2");
+            SceneManager.LoadSceneAsync("peter dev scene");
 
         }
 		
