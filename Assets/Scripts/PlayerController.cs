@@ -44,13 +44,13 @@ public class PlayerController : MonoBehaviour {
         if (col.tag == "Wood")
         {
             if (onGrass) return;
-            playGrass();
+            //playGrass();
             onGrass = true;
         }
         else if (col.tag == "Path")
         {
             if (!onGrass) return;
-            playWood();
+            //playWood();
             onGrass = false;
         }
         else {  }
