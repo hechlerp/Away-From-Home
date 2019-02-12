@@ -18,13 +18,14 @@ public class EnemyNavigation : MonoBehaviour {
     string alertState;
     Vector2 destination;
     bool stopped;
-    Quaternion targetRotation;
+    //Quaternion targetRotation;
     Vector2[] searchPoints;
     public float searchTime;
     bool searchedAreaComplete;
     bool lookingAround;
     int directionsChecked;
     Animator anim;
+    LineOfSightRotator losr;
 
     void Start() {
         alertState = "patrol";
@@ -40,6 +41,7 @@ public class EnemyNavigation : MonoBehaviour {
         lookingAround = false;
         directionsChecked = 0;
         anim = GetComponent<Animator>();
+        losr = GetComponentInChildren<LineOfSightRotator>();
     }
 
     void Update() {
@@ -65,7 +67,7 @@ public class EnemyNavigation : MonoBehaviour {
 
                 case "investigate":
                     if (searchPoints == null) {
-                        targetRotation = transform.rotation;
+                        //targetRotation = transform.rotation;
                         createSearchPoints();
                     }
                     break;
@@ -96,10 +98,12 @@ public class EnemyNavigation : MonoBehaviour {
 
             dir *= speed;
             if (!lookingAround) {
-                int lightDirection = getDirection(dir);
-                LineOfSightRotator loSR = GetComponentInChildren<LineOfSightRotator>();
-                if (loSR != null) {
-                    loSR.setRotation(lightDirection);
+                if (gameObject.name.Contains("EnemyDetector")) {
+                    int lightDirection = getDirection(dir);
+                    LineOfSightRotator loSR = GetComponentInChildren<LineOfSightRotator>();
+                    if (loSR != null) {
+                        loSR.setRotation(lightDirection);
+                    }
                 }
             }
             // The commented line is equivalent to the one below, but the one that is used
@@ -136,37 +140,43 @@ public class EnemyNavigation : MonoBehaviour {
         float degDirAngle = Mathf.Rad2Deg * dirAngle;
         if (degDirAngle < 45 & degDirAngle >= -45) {
             // left
-            anim.SetBool("WalkFront", true);
-            anim.SetBool("WalkRight", false);
-            anim.SetBool("WalkBack", false);
-            anim.SetBool("WalkLeft", false);
+            losr.setRotation(0);
+            setAnimDir("WalkFront");
             return 180;
         } else if (degDirAngle >= 45 & degDirAngle < 135) {
             // front
-
-            anim.SetBool("WalkLeft", true);
-            anim.SetBool("WalkFront", false);
-            anim.SetBool("WalkBack", false);
-            anim.SetBool("WalkRight", false);
+            losr.setRotation(270);
+            setAnimDir("WalkLeft");
 
             return 90;
         } else if (degDirAngle < -45 & degDirAngle >= -135) {
             //right
-
-            anim.SetBool("WalkBack", false);
-            anim.SetBool("WalkLeft", false);
-            anim.SetBool("WalkFront", false);
-            anim.SetBool("WalkRight", true);
+            losr.setRotation(90);
+            setAnimDir("WalkRight");
 
             return 270;
         } else {
             // back
-            anim.SetBool("WalkRight", false);
-            anim.SetBool("WalkLeft", false);
-            anim.SetBool("WalkFront", false);
-            anim.SetBool("WalkBack", true);
+            losr.setRotation(180);
+            setAnimDir("WalkBack");
 
             return 0;
+        }
+    }
+
+    void setAnimDir (string direction) {
+        string[] directions = new string[4] {
+            "WalkRight",
+            "WalkLeft",
+            "WalkFront",
+            "WalkBack"
+        };
+        foreach (string dir in directions) {
+            if (dir == direction) {
+                anim.SetBool(dir, true);
+            } else {
+                anim.SetBool(dir, false);
+            }
         }
     }
 

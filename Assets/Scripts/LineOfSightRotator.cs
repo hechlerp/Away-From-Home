@@ -25,6 +25,11 @@ public class LineOfSightRotator : MonoBehaviour {
         //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         //transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         transform.rotation = Quaternion.AngleAxis(deg, Vector3.forward);
+        if (transform.rotation.eulerAngles.z == 270) {
+            transform.GetChild(0).transform.localPosition = new Vector3(0.3f, 2.1f, 0f);
+        } else {
+            transform.GetChild(0).transform.localPosition = new Vector3(0f, 2.1f, 0f);
+        }
     }
 
     public void startRotatation() {

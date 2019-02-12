@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D col){
-        Debug.Log(col.name);
 		if (col.name == "EndPoint") {
 
             GameManager.instance.Win();

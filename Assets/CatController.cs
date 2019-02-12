@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CatController : MonoBehaviour
 {
-    bool idle = false;
     Transform folder;
     Animator anm;
 
@@ -54,7 +53,7 @@ public class CatController : MonoBehaviour
     {
         Pathfinding.Path path = GetComponent<EnemyNavigation>().path;
         if (path == null) return;
-        float speed = GetComponent<EnemyNavigation>().speed;
+        //float speed = GetComponent<EnemyNavigation>().speed;
         int currentWaypoint = GetComponent<EnemyNavigation>().currentWaypoint;
         Vector3 dir = path.vectorPath[currentWaypoint];
         //Vector3 dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
