@@ -30,10 +30,7 @@ public class EnemyDetection : MonoBehaviour {
     }
 
     public void detectObject(GameObject detectedObject) {
-        Debug.Log("detecting");
         objectToPursue = detectedObject;
-        //EnemyNavigation en = GetComponent<EnemyNavigation>();
-        //en.stopMoving();
         startCheckingDetection();
 
     }
@@ -43,7 +40,6 @@ public class EnemyDetection : MonoBehaviour {
     }
 
     public void stopCheckingDetection() {
-        Debug.Log("stop checking");
         checkDetection = false;
         objectToPursue = null;
     }
