@@ -52,4 +52,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltip: {fileID: 0}
-  middlePosition: {x: -17.1, y: 7.72, z: 0}
+  middlePosition: {x: 0, y: 0, z: 0}
