@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour {
     {
         if (!isActive) { return; }
 
-        MoveControlByTranslate();
+        MoveControlByRigidBody();
     }
 	public float m_speed = 5f;
 	//Translate移动控制函数
@@ -146,9 +146,8 @@ public class PlayerController : MonoBehaviour {
             animationName = "WalkRight";
             clicked = true;
         }
-        // Apply the modifiers from inputs to the rigidbody, deferring to its calculations.
-        rb.MovePosition(new Vector2(xMod, yMod) + new Vector2(transform.position.x, transform.position.y));
-
+        // Use the modifiers to generate a velocity for the RigidBody.
+        rb.velocity = new Vector2(xMod, yMod) * 100f;
         setAnimation(animationName);
 
         if (clicked) return true;
