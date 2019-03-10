@@ -9,7 +9,7 @@ public class Interactable : MonoBehaviour {
     public GameObject tooltip;
     public Vector3 middlePosition;
     bool readyToExecute;
-
+    bool shouldActivateTooltip;
     bool promptingBlocked;
 
     // The name of the parent game object, used for the interactionQueue's OrderedDictionary.
@@ -21,7 +21,7 @@ public class Interactable : MonoBehaviour {
         readyToExecute = false;
         promptingBlocked = false;
         nameToStore = transform.parent.gameObject.name;
-
+        shouldActivateTooltip = false;
     }
 
     void Update () {
@@ -52,10 +52,12 @@ public class Interactable : MonoBehaviour {
 
     public void blockPrompting() {
         promptingBlocked = true;
+        tooltip.SetActive(false);
     }
 
     public void unblockPrompting() {
         promptingBlocked = false;
+        shouldActivateTooltip = true;
     }
 
     public void setMiddlePosition(Vector3 position) {
@@ -67,6 +69,9 @@ public class Interactable : MonoBehaviour {
             if (!isPlayerInRange) {
                 isPlayerInRange = true;
                 tooltip.GetComponent<InteractionQueue>().addToQueue(nameToStore, gameObject);
+            } else if (shouldActivateTooltip) {
+                shouldActivateTooltip = false;
+                prepareForExecution();
             }
 
         }

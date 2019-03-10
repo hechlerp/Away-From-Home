@@ -4,11 +4,12 @@ using System.Collections.Specialized;
 using UnityEngine;
 
 public class InteractionQueue : MonoBehaviour {
-    OrderedDictionary interactionDictionary;
+    Dictionary<string, GameObject> interactionDictionary;
+    GameObject currentObject;
 
     // Initialize the dictionary, but disable the tooltip until it's needed
     void Awake () {
-        interactionDictionary = new OrderedDictionary();
+        interactionDictionary = new Dictionary<string, GameObject>();
         gameObject.SetActive(false);
 	}
 	
@@ -21,7 +22,7 @@ public class InteractionQueue : MonoBehaviour {
 
     public void removeFromQueue(string objName, GameObject interactionObj) {
         bool shouldPrepareNext = false;
-        if ((GameObject)interactionDictionary[0] == interactionObj) {
+        if (currentObject == interactionObj) {
             shouldPrepareNext = true;
         }
         interactionDictionary.Remove(objName);
@@ -34,8 +35,25 @@ public class InteractionQueue : MonoBehaviour {
 
     void prepareNextObject () {
         if (interactionDictionary.Count > 0) {
-            GameObject nextObject = (GameObject)interactionDictionary[0];
-            nextObject.GetComponent<Interactable>().prepareForExecution();
+            GameObject currentObject = findClosestObject();
+            currentObject.GetComponent<Interactable>().prepareForExecution();
         }
+    }
+
+
+
+    GameObject findClosestObject () {
+        float shortestDistance = 0;
+        GameObject closestObject = null;
+        float entryDistance;
+        Vector3 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
+        foreach(KeyValuePair<string, GameObject> entry in interactionDictionary) {
+            entryDistance = Vector3.Distance(entry.Value.transform.position, playerPos);
+            if (shortestDistance == 0 | shortestDistance > entryDistance) {
+                shortestDistance = entryDistance;
+                closestObject = entry.Value;
+            }
+        }
+        return closestObject;
     }
 }

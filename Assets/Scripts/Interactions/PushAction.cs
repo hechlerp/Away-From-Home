@@ -14,9 +14,10 @@ public class PushAction : MonoBehaviour {
     public float pushMag;
     Vector2 destination;
     public Vector3 tooltipOffset;
+    Interactable interactable;
 
     void Start() {
-        Interactable interactable = GetComponentInChildren<Interactable>();
+        interactable = GetComponentInChildren<Interactable>();
         interactable.setAction(pushObject);
         interactable.setMiddlePosition(transform.position + tooltipOffset);
         isPushing = false;
@@ -84,7 +85,7 @@ public class PushAction : MonoBehaviour {
 
     void startMoving() {
         moving = true;
-        GetComponentInChildren<Interactable>().blockPrompting();
+        interactable.blockPrompting();
     }
 
     void moveTowardDestination() {
