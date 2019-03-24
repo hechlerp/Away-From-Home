@@ -147,6 +147,7 @@ public class PlayerController : MonoBehaviour {
             clicked = true;
         }
         // Use the modifiers to generate a velocity for the RigidBody.
+        Debug.Log(new Vector2(xMod, yMod));
         rb.velocity = new Vector2(xMod, yMod) * 100f;
         setAnimation(animationName);
 
@@ -154,7 +155,7 @@ public class PlayerController : MonoBehaviour {
         return false;
     }
 
-    RaycastHit2D isNextSpaceBlocked(Vector3 movementVector) {
+    bool isNextSpaceBlocked(Vector3 movementVector) {
         Vector3 nextSpace = transform.position + movementVector;
         LayerMask lm = LayerMask.GetMask("Obstacle");
         Vector2 next2D = new Vector2(nextSpace.x, nextSpace.y);
