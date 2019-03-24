@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
     public static PlayerController instance;
 	public GameObject Winning;
     Animator anim;
+    Rigidbody2D rb;
 
     void setAnimation(string animationName) {
         string[] names = new string[4];
@@ -63,7 +64,7 @@ public class PlayerController : MonoBehaviour {
         WoodSound = Resources.Load("Wood", typeof(AudioClip)) as AudioClip;
         GrassSound = Resources.Load("Grass", typeof(AudioClip)) as AudioClip;
         anim = GetComponent<Animator>();
-
+        rb = GetComponent<Rigidbody2D>();
     }
     AudioClip WoodSound;
     AudioClip GrassSound;
@@ -88,11 +89,11 @@ public class PlayerController : MonoBehaviour {
     {
         if (!isActive) { return; }
 
-        MoveControlByTranslate();
+        MoveControlByRigidBody();
     }
 	public float m_speed = 5f;
 	//Translate移动控制函数
-	bool MoveControlByTranslate()
+	bool MoveControlByRigidBody()
 	{
         bool clicked = false;
 
@@ -106,35 +107,58 @@ public class PlayerController : MonoBehaviour {
         }
 
         string animationName = "";
-
+        Vector3 nextPoint;
+        float xMod = 0;
+        float yMod = 0;
 		if (Input.GetKey(KeyCode.W)|Input.GetKey(KeyCode.UpArrow)) //前
 		{
+            nextPoint = Vector3.up * TranslateAmount;
+            if (!isNextSpaceBlocked(nextPoint)) {
+                yMod += nextPoint.y;
+            }
             animationName = "WalkBack";
-            this.transform.Translate(Vector3.up*TranslateAmount); 
             clicked = true;
 		}
 		if (Input.GetKey(KeyCode.S) | Input.GetKey(KeyCode.DownArrow)) //后
 		{
+            nextPoint = Vector3.up * -TranslateAmount;
+            if (!isNextSpaceBlocked(nextPoint)) {
+                yMod += nextPoint.y;
+            }
             animationName = "WalkFront";
-            this.transform.Translate(Vector3.up *- TranslateAmount); 
             clicked = true;
 		}
 		if (Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.LeftArrow)) //左
 		{
+            nextPoint = Vector3.right * -TranslateAmount;
+            if (!isNextSpaceBlocked(nextPoint)) {
+                xMod += nextPoint.x;
+            }
             animationName = "WalkLeft";
-            this.transform.Translate(Vector3.right *-TranslateAmount); 
             clicked = true;
 		}
 		if (Input.GetKey(KeyCode.D) | Input.GetKey(KeyCode.RightArrow)) //右
 		{
+            nextPoint = Vector3.right * TranslateAmount;
+            if (!isNextSpaceBlocked(nextPoint)) {
+                xMod += nextPoint.x;
+            }
             animationName = "WalkRight";
-            this.transform.Translate(Vector3.right * TranslateAmount);
             clicked = true;
         }
-
+        // Use the modifiers to generate a velocity for the RigidBody.
+        rb.velocity = new Vector2(xMod, yMod) * 100f;
         setAnimation(animationName);
 
         if (clicked) return true;
         return false;
+    }
+
+    bool isNextSpaceBlocked(Vector3 movementVector) {
+        Vector3 nextSpace = transform.position + movementVector;
+        LayerMask lm = LayerMask.GetMask("Obstacle");
+        Vector2 next2D = new Vector2(nextSpace.x, nextSpace.y);
+        Vector2 pos2D = new Vector2(transform.position.x, transform.position.y);
+        return Physics2D.Linecast(pos2D, next2D, lm);
     }
 }
