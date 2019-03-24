@@ -80,7 +80,15 @@ public class Interactable : MonoBehaviour {
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.gameObject.tag == "Player") {
             isPlayerInRange = false;
-            tooltip.GetComponent<InteractionQueue>().removeFromQueue(nameToStore, gameObject);
+            Collider2D[] colliders = GetComponents<Collider2D>();
+            foreach (Collider2D cd in colliders) {
+                if (cd.IsTouching(collision)) {
+                    isPlayerInRange = true;
+                }
+            }
+            if (!isPlayerInRange) {
+                tooltip.GetComponent<InteractionQueue>().removeFromQueue(nameToStore, gameObject);
+            }
         }
     }
 }
