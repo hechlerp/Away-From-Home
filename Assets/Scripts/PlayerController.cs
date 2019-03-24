@@ -147,7 +147,6 @@ public class PlayerController : MonoBehaviour {
             clicked = true;
         }
         // Use the modifiers to generate a velocity for the RigidBody.
-        Debug.Log(new Vector2(xMod, yMod));
         rb.velocity = new Vector2(xMod, yMod) * 100f;
         setAnimation(animationName);
 
