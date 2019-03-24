@@ -17,7 +17,7 @@ public class EnemyDetection : MonoBehaviour {
             int layerMask = LayerMask.GetMask("Obstacle");
             //RaycastHit2D hit;
             if (!Physics2D.Linecast(transform.position, objectToPursue.transform.position, layerMask)) {
-                GameManager.instance.Fail();
+                //GameManager.instance.Fail();
                 GetComponent<EnemyNavigation>().enabled = false;
                 GetComponent<Pathfinding.AIPath>().enabled = false;
             }
