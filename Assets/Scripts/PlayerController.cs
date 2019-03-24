@@ -91,11 +91,10 @@ public class PlayerController : MonoBehaviour {
 
         MoveControlByRigidBody();
     }
-	public float m_speed = 5f;
+    public float m_speed = 5f;
 	//Translate移动控制函数
-	bool MoveControlByRigidBody()
+	void MoveControlByRigidBody()
 	{
-        bool clicked = false;
 
         float TranslateAmount = m_speed * Time.deltaTime;
 
@@ -113,52 +112,29 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetKey(KeyCode.W)|Input.GetKey(KeyCode.UpArrow)) //前
 		{
             nextPoint = Vector3.up * TranslateAmount;
-            if (!isNextSpaceBlocked(nextPoint)) {
-                yMod += nextPoint.y;
-            }
+            yMod += nextPoint.y;
             animationName = "WalkBack";
-            clicked = true;
 		}
 		if (Input.GetKey(KeyCode.S) | Input.GetKey(KeyCode.DownArrow)) //后
 		{
             nextPoint = Vector3.up * -TranslateAmount;
-            if (!isNextSpaceBlocked(nextPoint)) {
-                yMod += nextPoint.y;
-            }
+            yMod += nextPoint.y;
             animationName = "WalkFront";
-            clicked = true;
 		}
 		if (Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.LeftArrow)) //左
 		{
             nextPoint = Vector3.right * -TranslateAmount;
-            if (!isNextSpaceBlocked(nextPoint)) {
-                xMod += nextPoint.x;
-            }
+            xMod += nextPoint.x;
             animationName = "WalkLeft";
-            clicked = true;
 		}
 		if (Input.GetKey(KeyCode.D) | Input.GetKey(KeyCode.RightArrow)) //右
 		{
             nextPoint = Vector3.right * TranslateAmount;
-            if (!isNextSpaceBlocked(nextPoint)) {
-                xMod += nextPoint.x;
-            }
+            xMod += nextPoint.x;
             animationName = "WalkRight";
-            clicked = true;
         }
         // Use the modifiers to generate a velocity for the RigidBody.
         rb.velocity = new Vector2(xMod, yMod) * 100f;
         setAnimation(animationName);
-
-        if (clicked) return true;
-        return false;
-    }
-
-    bool isNextSpaceBlocked(Vector3 movementVector) {
-        Vector3 nextSpace = transform.position + movementVector;
-        LayerMask lm = LayerMask.GetMask("Obstacle");
-        Vector2 next2D = new Vector2(nextSpace.x, nextSpace.y);
-        Vector2 pos2D = new Vector2(transform.position.x, transform.position.y);
-        return Physics2D.Linecast(pos2D, next2D, lm);
     }
 }
