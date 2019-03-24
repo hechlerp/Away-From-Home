@@ -220,7 +220,7 @@ public class EnemyNavigation : MonoBehaviour {
         Vector2[] quadrantCorners = new Vector2[3];
         bool isTopHalf = (quadrantChoice % 2) == 1;
         bool isLeftHalf = (quadrantChoice < 2);
-        int coinFlip = Random.Range(0, 1);
+        int coinFlip = Random.Range(0, 2);
         bool verticalFirst = (coinFlip == 0);
         for (int i = 0; i < 3; i++)
         {
@@ -230,15 +230,35 @@ public class EnemyNavigation : MonoBehaviour {
             if (verticalFirst)
             {
                 addToY = (i < 2);
-                addToX = (i > 1);
+                addToX = (i > 0);
             }
             else
             {
-                addToY = (i > 1);
+                addToY = (i > 0);
                 addToX = (i < 2);
             }
-            if (addToX) { corner.x += maxDist; }
-            if (addToY) { corner.y += maxDist; }
+            if (addToX)
+            {
+                if (isLeftHalf)
+                {
+                    corner.x -= maxDist;
+                }
+                else
+                {
+                    corner.x += maxDist;
+                }
+            }
+            if (addToY)
+            {
+                if (isTopHalf)
+                {
+                    corner.y -= maxDist;
+                }
+                else
+                {
+                    corner.y += maxDist;
+                }
+            }
             quadrantCorners[i] = corner;
         }
         return quadrantCorners;
@@ -255,6 +275,7 @@ public class EnemyNavigation : MonoBehaviour {
                 prevLocation, quadrantCorners[i], maxDist, layerMask);
             if (hit.collider != null)
             {
+                Debug.Log("HIT");
                 bool isObstacleAtLocation = hit.collider.OverlapPoint(
                     quadrantCorners[i]);
                 if (isObstacleAtLocation)
