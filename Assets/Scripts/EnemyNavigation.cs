@@ -246,7 +246,24 @@ public class EnemyNavigation : MonoBehaviour {
 
     void getRayCastAdjustedPath(Vector2[] quadrantCorners)
     {
-
+        int layerMask = LayerMask.GetMask("Obstacle");
+        float maxDist = 3.0f;
+        Vector2 prevLocation = transform.position;
+        for (int i = 0; i < quadrantCorners.Length; i++)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(
+                prevLocation, quadrantCorners[i], maxDist, layerMask);
+            if (hit.collider != null)
+            {
+                bool isObstacleAtLocation = hit.collider.OverlapPoint(
+                    quadrantCorners[i]);
+                if (isObstacleAtLocation)
+                {
+                    quadrantCorners[i] = hit.point;
+                }
+            }
+            prevLocation = quadrantCorners[i];
+        }
     }
 
     void createSearchPoints() {
@@ -275,7 +292,7 @@ public class EnemyNavigation : MonoBehaviour {
         //foreach(Vector2 point in searchPoints) {
         //    Debug.Log(point);
         //}
-        //alertState = "search";
+        alertState = "search";
         StartCoroutine(returnToPatrolAfterTime(searchTime));
     }
 
