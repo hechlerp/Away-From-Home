@@ -13,9 +13,13 @@ public class PushAction : MonoBehaviour {
     bool moving;
     public float pushMag;
     Vector2 destination;
+    public Vector3 tooltipOffset;
+    Interactable interactable;
+
     void Start() {
-        Interactable interactable = GetComponentInChildren<Interactable>();
+        interactable = GetComponentInChildren<Interactable>();
         interactable.setAction(pushObject);
+        interactable.setMiddlePosition(transform.position + tooltipOffset);
         isPushing = false;
         moving = false;
         baseSpeed = 20;
@@ -81,6 +85,7 @@ public class PushAction : MonoBehaviour {
 
     void startMoving() {
         moving = true;
+        interactable.blockPrompting();
     }
 
     void moveTowardDestination() {
@@ -88,6 +93,9 @@ public class PushAction : MonoBehaviour {
         // if you're close enough, stop moving.
         if (Vector2.Distance(pos2D, destination) < 0.05) {
             moving = false;
+            Interactable interactableComponent = GetComponentInChildren<Interactable>();
+            interactableComponent.unblockPrompting();
+            interactableComponent.setMiddlePosition(transform.position + tooltipOffset);
         // otherwise, lerp toward the destination.
         } else {
             transform.position = Vector3.Lerp(transform.position, new Vector3(destination.x, destination.y, 0), Time.deltaTime * baseSpeed / weight);
