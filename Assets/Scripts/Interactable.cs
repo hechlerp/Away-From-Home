@@ -68,6 +68,7 @@ public class Interactable : MonoBehaviour {
         if (collision.gameObject.tag == "Player" & !promptingBlocked) {
             if (!isPlayerInRange) {
                 isPlayerInRange = true;
+                Debug.Log(nameToStore);
                 tooltip.GetComponent<InteractionQueue>().addToQueue(nameToStore, gameObject);
             } else if (shouldActivateTooltip) {
                 shouldActivateTooltip = false;

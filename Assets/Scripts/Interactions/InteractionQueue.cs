@@ -32,10 +32,10 @@ public class InteractionQueue : MonoBehaviour {
             prepareNextObject();
         }
     }
-
+    
     void prepareNextObject () {
         if (interactionDictionary.Count > 0) {
-            GameObject currentObject = findClosestObject();
+            currentObject = findClosestObject();
             currentObject.GetComponent<Interactable>().prepareForExecution();
         }
     }
