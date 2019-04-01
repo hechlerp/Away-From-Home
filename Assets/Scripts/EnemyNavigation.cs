@@ -49,7 +49,7 @@ public class EnemyNavigation : MonoBehaviour {
         if (stopped) {
             //if (alertState == 'investigate')
             //{
-            //     randomized rotation logic
+            //     randomized rotation logic (future commit)
             //}
             return;
         }
@@ -209,19 +209,30 @@ public class EnemyNavigation : MonoBehaviour {
 
     Vector2[] getNaiveQuadrantCorners(int quadrantChoice)
     {
-        // Quadrants as follows (according to direction faced by enemy
+        // Quadrants as follows (in game space)
         //     |      
         //  0  |  2
         //_____|_____
         //     | 
         //  1  |  3
         //     |
+
         float maxDist = 3;
+
+        // The following three lines serve to pick one of the 
+        // above quadrants at random
         Vector2[] quadrantCorners = new Vector2[3];
         bool isTopHalf = (quadrantChoice % 2) == 1;
         bool isLeftHalf = (quadrantChoice < 2);
         int coinFlip = Random.Range(0, 2);
+
+        // now that we have a quadrant selected at random, we would
+        // like to randomly choose whether the enemy patrols the 
+        // quadrant in a clockwise or counter-clockwise fashion
         bool verticalFirst = (coinFlip == 0);
+
+        // get the corners of the randomly selected quadrant in the
+        // order in which we would like the enemy to visit them
         for (int i = 0; i < 3; i++)
         {
             Vector2 corner = new Vector2(transform.position.x, transform.position.y);
@@ -266,21 +277,32 @@ public class EnemyNavigation : MonoBehaviour {
 
     void getRayCastAdjustedPath(Vector2[] quadrantCorners)
     {
+        // this function moves any patrol corners that lie 
+        // in the middle of a collider to a nearby navigable point
         int layerMask = LayerMask.GetMask("Obstacle");
         float maxDist = 3.0f;
         Vector2 prevLocation = transform.position;
         for (int i = 0; i < quadrantCorners.Length; i++)
         {
-            RaycastHit2D hit = Physics2D.Raycast(
+            // to see if our point is in the middle of an obstacle
+            // it is not sufficient to simply do Physics2D.RaycastHit
+            // because it does not cover the scenario where the patrol point
+            // is inside an obstacle, but the direct path also intersects
+            // with a closer obstacle. So we need to search all the hits
+            RaycastHit2D[] hits = Physics2D.RaycastAll(
                 prevLocation, quadrantCorners[i], maxDist, layerMask);
-            if (hit.collider != null)
+
+            foreach(RaycastHit2D hit in hits)
             {
-                Debug.Log("HIT");
-                bool isObstacleAtLocation = hit.collider.OverlapPoint(
-                    quadrantCorners[i]);
-                if (isObstacleAtLocation)
+                if (hit.collider != null)
                 {
-                    quadrantCorners[i] = hit.point;
+                    bool isObstacleAtLocation = hit.collider.OverlapPoint(
+                        quadrantCorners[i]);
+                    if (isObstacleAtLocation)
+                    {
+                        quadrantCorners[i] = hit.point;
+                        break;
+                    }
                 }
             }
             prevLocation = quadrantCorners[i];
@@ -292,27 +314,6 @@ public class EnemyNavigation : MonoBehaviour {
         Vector2[] investigationPath = getNaiveQuadrantCorners(quadrantChoice);
         getRayCastAdjustedPath(investigationPath);
         searchPoints = investigationPath;
-        //searchPoints = new Vector2[5];
-        //int[] directions = new int[5] { 0, 72, 144, 216, 288 };
-        //float maxDist = 3;
-        //Vector2 position = getCurrentPos();
-        //int layerMask = LayerMask.GetMask("Obstacle");
-        //for (int i = 0; i < directions.Length; i++) {
-        //    int direction = directions[i];
-        //    float radDir = direction * Mathf.Deg2Rad;
-        //    Vector2 vectorDir = new Vector2(Mathf.Cos(radDir), Mathf.Sin(radDir));
-        //    RaycastHit2D hit = Physics2D.Raycast(position, vectorDir, maxDist, layerMask);
-        //    if (hit.collider != null) {
-        //        Vector3 extents = transform.GetComponent<SpriteRenderer>().sprite.bounds.extents;
-        //        searchPoints[i] = hit.point;
-        //        searchPoints[i] = new Vector2(transform.position.x, transform.position.y);
-        //    } else {
-        //        searchPoints[i] = position - (vectorDir * maxDist);
-        //    }
-        //}
-        //foreach(Vector2 point in searchPoints) {
-        //    Debug.Log(point);
-        //}
         alertState = "search";
         StartCoroutine(returnToPatrolAfterTime(searchTime));
     }
