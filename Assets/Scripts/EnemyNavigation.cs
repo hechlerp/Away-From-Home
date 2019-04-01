@@ -207,8 +207,7 @@ public class EnemyNavigation : MonoBehaviour {
         hasPathed = false;
     }
 
-    Vector2[] getNaiveQuadrantCorners(int quadrantChoice)
-    {
+    Vector2[] getNaiveQuadrantCorners(int quadrantChoice) {
         // Quadrants as follows (in game space)
         //     |      
         //  0  |  2
@@ -233,40 +232,31 @@ public class EnemyNavigation : MonoBehaviour {
 
         // get the corners of the randomly selected quadrant in the
         // order in which we would like the enemy to visit them
-        for (int i = 0; i < 3; i++)
-        {
+        for (int i = 0; i < 3; i++) {
             Vector2 corner = new Vector2(transform.position.x, transform.position.y);
             bool addToY;
             bool addToX;
-            if (verticalFirst)
-            {
+            if (verticalFirst) {
                 addToY = (i < 2);
                 addToX = (i > 0);
             }
-            else
-            {
+            else {
                 addToY = (i > 0);
                 addToX = (i < 2);
             }
-            if (addToX)
-            {
-                if (isLeftHalf)
-                {
+            if (addToX) {
+                if (isLeftHalf) {
                     corner.x -= maxDist;
                 }
-                else
-                {
+                else {
                     corner.x += maxDist;
                 }
             }
-            if (addToY)
-            {
-                if (isTopHalf)
-                {
+            if (addToY) {
+                if (isTopHalf) {
                     corner.y -= maxDist;
                 }
-                else
-                {
+                else {
                     corner.y += maxDist;
                 }
             }
@@ -275,15 +265,13 @@ public class EnemyNavigation : MonoBehaviour {
         return quadrantCorners;
     }
 
-    void getRayCastAdjustedPath(Vector2[] quadrantCorners)
-    {
+    void getRayCastAdjustedPath(Vector2[] quadrantCorners) {
         // this function moves any patrol corners that lie 
         // in the middle of a collider to a nearby navigable point
         int layerMask = LayerMask.GetMask("Obstacle");
         float maxDist = 3.0f;
         Vector2 prevLocation = transform.position;
-        for (int i = 0; i < quadrantCorners.Length; i++)
-        {
+        for (int i = 0; i < quadrantCorners.Length; i++) {
             // to see if our point is in the middle of an obstacle
             // it is not sufficient to simply do Physics2D.RaycastHit
             // because it does not cover the scenario where the patrol point
@@ -292,14 +280,11 @@ public class EnemyNavigation : MonoBehaviour {
             RaycastHit2D[] hits = Physics2D.RaycastAll(
                 prevLocation, quadrantCorners[i], maxDist, layerMask);
 
-            foreach(RaycastHit2D hit in hits)
-            {
-                if (hit.collider != null)
-                {
+            foreach(RaycastHit2D hit in hits) {
+                if (hit.collider != null) {
                     bool isObstacleAtLocation = hit.collider.OverlapPoint(
                         quadrantCorners[i]);
-                    if (isObstacleAtLocation)
-                    {
+                    if (isObstacleAtLocation) {
                         quadrantCorners[i] = hit.point;
                         break;
                     }
