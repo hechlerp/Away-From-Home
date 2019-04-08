@@ -12,11 +12,15 @@ public class PlayerController : MonoBehaviour {
     Rigidbody2D rb;
 
     void setAnimation(string animationName) {
-        string[] names = new string[4];
-        names[0] = "WalkFront";
-        names[1] = "WalkBack";
-        names[2] = "WalkLeft";
-        names[3] = "WalkRight";
+        string[] names = new string[8];
+        names[0] = "WalkDown";
+        names[1] = "WalkDownRight";
+        names[2] = "WalkRight";
+        names[3] = "WalkUpRight";
+        names[4] = "WalkUp";
+        names[5] = "WalkUpLeft";
+        names[6] = "WalkLeft";
+        names[7] = "WalkDownLeft";
         foreach (string animation in names) {
             if (animation == animationName) {
                 anim.SetBool(animation, true);
@@ -63,7 +67,8 @@ public class PlayerController : MonoBehaviour {
         instance = this;
         WoodSound = Resources.Load("Wood", typeof(AudioClip)) as AudioClip;
         GrassSound = Resources.Load("Grass", typeof(AudioClip)) as AudioClip;
-        anim = GetComponent<Animator>();
+        // The 0th child is the sprite object
+        anim = transform.GetChild(0).GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
     AudioClip WoodSound;
@@ -113,25 +118,35 @@ public class PlayerController : MonoBehaviour {
 		{
             nextPoint = Vector3.up * TranslateAmount;
             yMod += nextPoint.y;
-            animationName = "WalkBack";
+            animationName = "WalkUp";
 		}
 		if (Input.GetKey(KeyCode.S) | Input.GetKey(KeyCode.DownArrow)) //后
 		{
             nextPoint = Vector3.up * -TranslateAmount;
             yMod += nextPoint.y;
-            animationName = "WalkFront";
+            animationName = "WalkDown";
 		}
 		if (Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.LeftArrow)) //左
 		{
             nextPoint = Vector3.right * -TranslateAmount;
             xMod += nextPoint.x;
             animationName = "WalkLeft";
+            if (yMod > 0) {
+                animationName = "WalkUpLeft";
+            } else if (yMod < 0) {
+                animationName = "WalkDownLeft";
+            }
 		}
 		if (Input.GetKey(KeyCode.D) | Input.GetKey(KeyCode.RightArrow)) //右
 		{
             nextPoint = Vector3.right * TranslateAmount;
             xMod += nextPoint.x;
             animationName = "WalkRight";
+            if (yMod > 0) {
+                animationName = "WalkUpRight";
+            } else if (yMod < 0) {
+                animationName = "WalkDownRight";
+            }
         }
         // Use the modifiers to generate a velocity for the RigidBody.
         rb.velocity = new Vector2(xMod, yMod) * 100f;
