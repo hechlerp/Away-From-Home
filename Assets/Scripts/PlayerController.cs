@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject Winning;
     Animator anim;
     Rigidbody2D rb;
+    bool lockedMovement;
 
     void setAnimation(string animationName) {
         string[] names = new string[4];
@@ -65,6 +66,7 @@ public class PlayerController : MonoBehaviour {
         GrassSound = Resources.Load("Grass", typeof(AudioClip)) as AudioClip;
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        lockedMovement = false;
     }
     AudioClip WoodSound;
     AudioClip GrassSound;
@@ -91,6 +93,15 @@ public class PlayerController : MonoBehaviour {
 
         MoveControlByRigidBody();
     }
+
+    public void lockPlayerMovement () {
+        lockedMovement = true;
+    }
+
+    public void unlockPlayerMovement () {
+        lockedMovement = false;
+    }
+
     public float m_speed = 5f;
 	//Translate移动控制函数
 	void MoveControlByRigidBody()
@@ -104,37 +115,38 @@ public class PlayerController : MonoBehaviour {
 
             }
         }
-
-        string animationName = "";
-        Vector3 nextPoint;
-        float xMod = 0;
-        float yMod = 0;
-		if (Input.GetKey(KeyCode.W)|Input.GetKey(KeyCode.UpArrow)) //前
-		{
-            nextPoint = Vector3.up * TranslateAmount;
-            yMod += nextPoint.y;
-            animationName = "WalkBack";
-		}
-		if (Input.GetKey(KeyCode.S) | Input.GetKey(KeyCode.DownArrow)) //后
-		{
-            nextPoint = Vector3.up * -TranslateAmount;
-            yMod += nextPoint.y;
-            animationName = "WalkFront";
-		}
-		if (Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.LeftArrow)) //左
-		{
-            nextPoint = Vector3.right * -TranslateAmount;
-            xMod += nextPoint.x;
-            animationName = "WalkLeft";
-		}
-		if (Input.GetKey(KeyCode.D) | Input.GetKey(KeyCode.RightArrow)) //右
-		{
-            nextPoint = Vector3.right * TranslateAmount;
-            xMod += nextPoint.x;
-            animationName = "WalkRight";
+        if (!lockedMovement) {
+            string animationName = "";
+            Vector3 nextPoint;
+            float xMod = 0;
+            float yMod = 0;
+            if (Input.GetKey(KeyCode.W) | Input.GetKey(KeyCode.UpArrow)) //前
+            {
+                nextPoint = Vector3.up * TranslateAmount;
+                yMod += nextPoint.y;
+                animationName = "WalkBack";
+            }
+            if (Input.GetKey(KeyCode.S) | Input.GetKey(KeyCode.DownArrow)) //后
+            {
+                nextPoint = Vector3.up * -TranslateAmount;
+                yMod += nextPoint.y;
+                animationName = "WalkFront";
+            }
+            if (Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.LeftArrow)) //左
+            {
+                nextPoint = Vector3.right * -TranslateAmount;
+                xMod += nextPoint.x;
+                animationName = "WalkLeft";
+            }
+            if (Input.GetKey(KeyCode.D) | Input.GetKey(KeyCode.RightArrow)) //右
+            {
+                nextPoint = Vector3.right * TranslateAmount;
+                xMod += nextPoint.x;
+                animationName = "WalkRight";
+            }
+            // Use the modifiers to generate a velocity for the RigidBody.
+            rb.velocity = new Vector2(xMod, yMod) * 100f;
+            setAnimation(animationName);
         }
-        // Use the modifiers to generate a velocity for the RigidBody.
-        rb.velocity = new Vector2(xMod, yMod) * 100f;
-        setAnimation(animationName);
     }
 }
