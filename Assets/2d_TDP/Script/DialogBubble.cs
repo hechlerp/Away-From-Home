@@ -117,7 +117,7 @@ public class DialogBubble : MonoBehaviour {
 						vTextMesh.text = vTrueMessage;
 						child.GetComponent<MeshRenderer>().sortingOrder = 1550;
 						
-						Transform vMouseIcon = child.FindChild("MouseIcon");
+						Transform vMouseIcon = child.Find("MouseIcon");
 						if (vMouseIcon != null && !vBubble.vClickToCloseBubble)
 							vMouseIcon.gameObject.SetActive(false);
 					}
