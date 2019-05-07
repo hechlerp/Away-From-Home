@@ -85,6 +85,7 @@ public class PushAction : MonoBehaviour {
 
     void startMoving() {
         moving = true;
+        player.GetComponent<PlayerController>().lockPlayerMovement();
         interactable.blockPrompting();
     }
 
@@ -93,12 +94,16 @@ public class PushAction : MonoBehaviour {
         // if you're close enough, stop moving.
         if (Vector2.Distance(pos2D, destination) < 0.05) {
             moving = false;
+            player.GetComponent<PlayerController>().unlockPlayerMovement();
             Interactable interactableComponent = GetComponentInChildren<Interactable>();
             interactableComponent.unblockPrompting();
             interactableComponent.setMiddlePosition(transform.position + tooltipOffset);
         // otherwise, lerp toward the destination.
         } else {
+            Vector3 lastPosition = transform.position;
             transform.position = Vector3.Lerp(transform.position, new Vector3(destination.x, destination.y, 0), Time.deltaTime * baseSpeed / weight);
+            Vector3 positionDiff = transform.position - lastPosition;
+            player.transform.position = player.transform.position + positionDiff;
             // As the block moves, update the blocked area.
             blockArea();
         }
