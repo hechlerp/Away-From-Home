@@ -7,6 +7,7 @@ public class ObtainAction : MonoBehaviour
     // Start is called before the first frame update
     Interactable interactable;
     public GameObject player;
+    public bool shouldDestroy;
     void Start()
     {
         interactable = GetComponentInChildren<Interactable>();
@@ -14,14 +15,13 @@ public class ObtainAction : MonoBehaviour
         interactable.setMiddlePosition(transform.position + interactable.middlePosition);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void gatherItem() {
         player.GetComponent<PlayerInventory>().addToInventory(name, 1);
-        gameObject.SetActive(false);
+        if (shouldDestroy) {
+            // Destroy self upon being picked up.
+            Destroy(gameObject);
+        } else {
+            gameObject.SetActive(false);
+        }
     }
 }
