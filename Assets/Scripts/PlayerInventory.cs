@@ -23,11 +23,12 @@ public class PlayerInventory : MonoBehaviour
         return inventory.ContainsKey(name) & (int)inventory[name] > 0;
     }
 
-    public void removeFromInventory(string name, string amt) {
-        if (amt == "all") {
+    public void removeFromInventory(string name, int amt) {
+        // interpret -1 to be a command to remove all items of type "name"
+        if (amt == -1) {
             inventory.Remove(name);
         } else {
-            inventory[name] = (int)inventory[name] - int.Parse(amt);
+            inventory[name] = (int)inventory[name] - amt;
             if ((int)inventory[name] < 0) {
                 inventory[name] = 0;
             }

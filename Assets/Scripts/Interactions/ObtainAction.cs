@@ -8,6 +8,7 @@ public class ObtainAction : MonoBehaviour
     Interactable interactable;
     public GameObject player;
     public bool shouldDestroy;
+    public string itemName;
     void Start()
     {
         interactable = GetComponentInChildren<Interactable>();
@@ -16,7 +17,7 @@ public class ObtainAction : MonoBehaviour
     }
 
     void gatherItem() {
-        player.GetComponent<PlayerInventory>().addToInventory(name, 1);
+        player.GetComponent<PlayerInventory>().addToInventory(itemName, 1);
         if (shouldDestroy) {
             // Destroy self upon being picked up.
             Destroy(gameObject);

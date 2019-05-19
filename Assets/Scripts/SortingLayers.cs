@@ -5,10 +5,12 @@ using UnityEngine;
 public class SortingLayers : MonoBehaviour {
     public bool useParent2DCollider;
     void LateUpdate() {
+        float positionToMeasure;
         if (useParent2DCollider) {
-            GetComponent<SpriteRenderer>().sortingOrder = -(int)(transform.parent.GetComponent<Collider2D>().bounds.center.y * 100);
+            positionToMeasure = transform.parent.GetComponent<Collider2D>().bounds.center.y;
         } else {
-            GetComponent<SpriteRenderer>().sortingOrder = -(int)(transform.position.y * 100);
+            positionToMeasure = transform.position.y;
         }
+        GetComponent<SpriteRenderer>().sortingOrder = -(int)(positionToMeasure * 100);
     }
 }
