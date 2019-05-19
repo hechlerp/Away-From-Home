@@ -21,7 +21,7 @@ public class Interactable : MonoBehaviour {
         readyToExecute = false;
         promptingBlocked = false;
         nameToStore = transform.parent.gameObject.name;
-        shouldActivateTooltip = false;
+        shouldActivateTooltip = true;
     }
 
     void Update () {
