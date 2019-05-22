@@ -18,7 +18,7 @@ public class BarrelAction : MonoBehaviour {
 		
 	}
 
-    void dropBarrels() {
+    void dropBarrels(Dictionary<string, object> args) {
         if (!barrelsDropped) {
             barrelsDropped = true;
             PolygonCollider2D pcd = GetComponent<PolygonCollider2D>();

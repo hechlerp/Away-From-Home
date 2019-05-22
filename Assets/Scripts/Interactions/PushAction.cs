@@ -36,7 +36,12 @@ public class PushAction : MonoBehaviour {
         }
     }
 
-    void pushObject() {
+    void pushObject(Dictionary<string, object> args) {
+        Dictionary<string, bool> colliders = (Dictionary<string, bool>)args["colliders"];
+        foreach (string key in colliders.Keys) {
+            Debug.Log(key);
+            Debug.Log(colliders[key]);
+        }
         isPushing = true;
     }
     // Get the direction that the player is facing.

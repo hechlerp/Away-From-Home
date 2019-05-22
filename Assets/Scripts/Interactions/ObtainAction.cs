@@ -16,7 +16,7 @@ public class ObtainAction : MonoBehaviour
         interactable.setMiddlePosition(transform.position + interactable.middlePosition);
     }
 
-    void gatherItem() {
+    void gatherItem(Dictionary<string, object> args) {
         player.GetComponent<PlayerInventory>().addToInventory(itemName, 1);
         if (shouldDestroy) {
             // Destroy self upon being picked up.
