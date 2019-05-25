@@ -14,12 +14,24 @@ public class PushAction : MonoBehaviour {
     public float pushMag;
     Vector2 destination;
     public Vector3 tooltipOffset;
+    public List<string> pushableDirs;
+    Dictionary<string, bool> playerDirs;
     Interactable interactable;
+    Dictionary<string, string> inputDirDict;
 
     void Start() {
         interactable = GetComponentInChildren<Interactable>();
         interactable.setAction(pushObject);
         interactable.setMiddlePosition(transform.position + tooltipOffset);
+        playerDirs = new Dictionary<string, bool>();
+        foreach (string dir in pushableDirs) {
+            playerDirs.Add(dir, false);
+        }
+        inputDirDict = new Dictionary<string, string>();
+        inputDirDict.Add("w", "up");
+        inputDirDict.Add("s", "down");
+        inputDirDict.Add("a", "left");
+        inputDirDict.Add("d", "right");
         isPushing = false;
         moving = false;
         baseSpeed = 20;
@@ -29,6 +41,10 @@ public class PushAction : MonoBehaviour {
     void Update() {
         if (Input.GetKeyUp("f") & isPushing) {
             isPushing = false;
+            List<string> playerDirKeys = new List<string>(playerDirs.Keys);
+            foreach (string key in playerDirKeys) {
+                playerDirs[key] = false;
+            }
         } else if (isPushing & !moving) {
             attemptPush();
         } else if (moving) {
@@ -36,35 +52,83 @@ public class PushAction : MonoBehaviour {
         }
     }
 
-    void pushObject() {
+    void pushObject(Dictionary<string, object> args) {
+        Dictionary<string, bool> colliders = (Dictionary<string, bool>)args["colliders"];
+        List<string> playerDirKeys = new List<string>(playerDirs.Keys);
+        foreach (string key in playerDirKeys) {
+            playerDirs[key] = false;
+        }
+        foreach (string key in colliders.Keys) {
+            if (playerDirs.ContainsKey(key)) {
+                playerDirs[key] = colliders[key];
+            }
+        }
         isPushing = true;
     }
     // Get the direction that the player is facing.
-    Vector2 determineDirection(Vector2 pos) {
+    List<float> determineDirection() {
+        List<float> pushDirection = new List<float>();
 
-        Vector3 playerPos = player.transform.position;
-        Vector2 playerPos2D = new Vector2(playerPos.x, playerPos.y);
-        Vector2 direction = (pos - playerPos2D).normalized;
-        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y)) {
-            if (direction.x > 0) {
-                return Vector2.right;
+        // in each case, we want to check if the player is pushing AGAINST the given side
+        string inputDirection = "";
+        if (Input.GetKey("w") | Input.GetKey("up")) {
+            inputDirection += "up";
+        }
+        if (Input.GetKey("s") | Input.GetKey("down")) {
+            inputDirection += "down";
+        }
+        if (Input.GetKey("a") | Input.GetKey("left")) {
+            inputDirection += "left";
+        }
+        if (Input.GetKey("d") | Input.GetKey("right")) {
+            inputDirection += "right";
+        }
+        if (pushableDirs.Contains(inputDirection)) {
+            if (playerDirs.ContainsKey("right") && playerDirs["right"] && inputDirection.Contains("left")) {
+                pushDirection.Add(-1);
+                pushDirection.Add(0);
+            } else if (playerDirs.ContainsKey("left") && playerDirs["left"] && inputDirection.Contains("right")) {
+                pushDirection.Add(1);
+                pushDirection.Add(0);
+            } else if (playerDirs.ContainsKey("up") && playerDirs["up"] && inputDirection.Contains("down")) {
+                pushDirection.Add(0);
+                pushDirection.Add(-1);
+            } else if (playerDirs.ContainsKey("down") && playerDirs["down"] && inputDirection.Contains("up")) {
+                pushDirection.Add(0);
+                pushDirection.Add(1);
+            } else if (playerDirs.ContainsKey("downleft") && playerDirs["downleft"] && inputDirection.Contains("upright")) {
+                pushDirection.Add(1);
+                pushDirection.Add(1);
+            } else if (playerDirs.ContainsKey("downright") && playerDirs["downright"] && inputDirection.Contains("upleft")) {
+                pushDirection.Add(-1);
+                pushDirection.Add(1);
+            } else if (playerDirs.ContainsKey("upleft") && playerDirs["upleft"] && inputDirection.Contains("downright")) {
+                pushDirection.Add(1);
+                pushDirection.Add(-1);
+            } else if (playerDirs.ContainsKey("upright") && playerDirs["upright"] && inputDirection.Contains("downleft")) {
+                pushDirection.Add(-1);
+                pushDirection.Add(-1);
             } else {
-                return Vector2.left;
+                pushDirection.Add(0);
+                pushDirection.Add(0);
             }
         } else {
-            if (direction.y > 0) {
-                return Vector2.up;
-            } else {
-                return Vector2.down;
-            }
+            pushDirection.Add(0);
+            pushDirection.Add(0);
         }
+        return pushDirection;
     }
 
     void attemptPush() {
         Vector3 pos = transform.position;
         Vector2 pos2D = new Vector2(pos.x, pos.y);
-        Vector2 direction = determineDirection(pos2D);
-        destination = pos2D + direction * pushMag;
+        List<float> direction = determineDirection();
+        if (direction[0] != 0f && direction[1] != 0f) {
+            direction[0] /= 1.41f;
+            direction[1] /= 1.41f;
+        }
+        Vector2 dirVector = new Vector2(direction[0], direction[1]);
+        destination = pos2D + dirVector * pushMag;
         bool isClear = false;
         int layerMask = LayerMask.GetMask("Obstacle");
         RaycastHit2D[] results = Physics2D.LinecastAll(transform.position, destination, layerMask);
@@ -72,13 +136,7 @@ public class PushAction : MonoBehaviour {
             isClear = true;
         }
         // Push the block if it can be pushed, you're facing the right way, and trying to interact.
-        if (isClear & direction == Vector2.right & (Input.GetKey("d") | Input.GetKey("right"))) {
-            startMoving();
-        } else if (isClear & direction == Vector2.down & (Input.GetKey("s") | Input.GetKey("down"))) {
-            startMoving();
-        } else if (isClear & direction == Vector2.left & (Input.GetKey("a") | Input.GetKey("left"))) {
-            startMoving();
-        } else if (isClear & direction == Vector2.up & (Input.GetKey("w") | Input.GetKey("up"))) {
+        if (isClear && (dirVector.x != 0 | dirVector.y != 0)) {
             startMoving();
         }
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Interactable : MonoBehaviour {
     //Collider2D[] cds;
     bool isPlayerInRange;
-    System.Action action = null;
+    System.Action<Dictionary<string, object>> action = null;
     public GameObject tooltip;
     public Vector3 middlePosition;
     bool readyToExecute;
@@ -14,6 +14,7 @@ public class Interactable : MonoBehaviour {
 
     // The name of the parent game object, used for the interactionQueue's OrderedDictionary.
     string nameToStore;
+    Dictionary<string, bool> occupiedColliders;
 
     void Start () {
         //cds = GetComponents<Collider2D>();
@@ -22,6 +23,12 @@ public class Interactable : MonoBehaviour {
         promptingBlocked = false;
         nameToStore = transform.parent.gameObject.name;
         shouldActivateTooltip = true;
+        occupiedColliders = new Dictionary<string, bool>();
+        foreach (Transform child in transform) {
+            if (child.name == "InteractableCollider") {
+                occupiedColliders.Add(child.GetComponent<InteractableCollider>().colliderName, false);
+            }
+        }
     }
 
     void Update () {
@@ -29,13 +36,13 @@ public class Interactable : MonoBehaviour {
             if (Input.GetKeyDown("f")) {
                 // I think trycatch can be used here, will refactor later if I get the chance.
                 if (action != null) {
-                    action();
+                    action(new Dictionary<string, object>() { { "colliders", occupiedColliders } });
                 }
             }
         }
 	}
 
-    public void setAction (System.Action passedAction) {
+    public void setAction (System.Action<Dictionary<string, object>> passedAction) {
         action = passedAction;
     }
 
@@ -64,8 +71,9 @@ public class Interactable : MonoBehaviour {
         middlePosition = position;
     }
 
-    private void OnTriggerStay2D(Collider2D collision) {
-        if (collision.gameObject.tag == "Player" & !promptingBlocked) {
+    public void handleCollision(Collider2D collision, string colliderName) {
+        if (collision.gameObject.tag == "Player" &!promptingBlocked) {
+            occupiedColliders[colliderName] = true;
             if (!isPlayerInRange) {
                 isPlayerInRange = true;
                 tooltip.GetComponent<InteractionQueue>().addToQueue(nameToStore, gameObject);
@@ -73,16 +81,16 @@ public class Interactable : MonoBehaviour {
                 shouldActivateTooltip = false;
                 prepareForExecution();
             }
-
         }
+
     }
 
-    private void OnTriggerExit2D(Collider2D collision) {
+    public void handleCollisionExit(Collider2D collision, string colliderName) {
         if (collision.gameObject.tag == "Player") {
+            occupiedColliders[colliderName] = false;
             isPlayerInRange = false;
-            Collider2D[] colliders = GetComponents<Collider2D>();
-            foreach (Collider2D cd in colliders) {
-                if (cd.IsTouching(collision)) {
+            foreach (string key in occupiedColliders.Keys) {
+                if (occupiedColliders[key]) {
                     isPlayerInRange = true;
                 }
             }
@@ -90,5 +98,6 @@ public class Interactable : MonoBehaviour {
                 tooltip.GetComponent<InteractionQueue>().removeFromQueue(nameToStore, gameObject);
             }
         }
+        
     }
 }
