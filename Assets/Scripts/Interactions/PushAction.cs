@@ -84,18 +84,32 @@ public class PushAction : MonoBehaviour {
             inputDirection += "right";
         }
         if (pushableDirs.Contains(inputDirection)) {
-            if (playerDirs.ContainsKey("right") & playerDirs["right"] & inputDirection.Contains("left")) {
+            if (playerDirs.ContainsKey("right") && playerDirs["right"] && inputDirection.Contains("left")) {
                 pushDirection.Add(-1);
-            } else if (playerDirs.ContainsKey("left") & playerDirs["left"] & inputDirection.Contains("right")) {
+                pushDirection.Add(0);
+            } else if (playerDirs.ContainsKey("left") && playerDirs["left"] && inputDirection.Contains("right")) {
                 pushDirection.Add(1);
+                pushDirection.Add(0);
+            } else if (playerDirs.ContainsKey("up") && playerDirs["up"] && inputDirection.Contains("down")) {
+                pushDirection.Add(0);
+                pushDirection.Add(-1);
+            } else if (playerDirs.ContainsKey("down") && playerDirs["down"] && inputDirection.Contains("up")) {
+                pushDirection.Add(0);
+                pushDirection.Add(1);
+            } else if (playerDirs.ContainsKey("downleft") && playerDirs["downleft"] && inputDirection.Contains("upright")) {
+                pushDirection.Add(1);
+                pushDirection.Add(1);
+            } else if (playerDirs.ContainsKey("downright") && playerDirs["downright"] && inputDirection.Contains("upleft")) {
+                pushDirection.Add(-1);
+                pushDirection.Add(1);
+            } else if (playerDirs.ContainsKey("upleft") && playerDirs["upleft"] && inputDirection.Contains("downright")) {
+                pushDirection.Add(1);
+                pushDirection.Add(-1);
+            } else if (playerDirs.ContainsKey("upright") && playerDirs["upright"] && inputDirection.Contains("downleft")) {
+                pushDirection.Add(-1);
+                pushDirection.Add(-1);
             } else {
                 pushDirection.Add(0);
-            }
-            if (playerDirs.ContainsKey("up") & playerDirs["up"] & inputDirection.Contains("down")) {
-                pushDirection.Add(-1);
-            } else if (playerDirs.ContainsKey("down") & playerDirs["down"] & inputDirection.Contains("up")) {
-                pushDirection.Add(1);
-            } else {
                 pushDirection.Add(0);
             }
         } else {
@@ -121,7 +135,6 @@ public class PushAction : MonoBehaviour {
         if (results.Length < 2) {
             isClear = true;
         }
-        Debug.Log(dirVector);
         // Push the block if it can be pushed, you're facing the right way, and trying to interact.
         if (isClear && (dirVector.x != 0 | dirVector.y != 0)) {
             startMoving();
