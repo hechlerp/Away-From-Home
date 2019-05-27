@@ -5,12 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class menumanager : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	public void startgame() {
-        SceneManager.LoadSceneAsync("peter dev scene");
+    // Use this for initialization
+    void Start() {
+
+    }
+    public void startgame() {
+        SceneManager.LoadSceneAsync("RenderingDevScene");
+    }
+
+    public void goToControls() {
+        SceneManager.LoadSceneAsync("ControlsScene");
+    }
+
+    public void goToLevelSelector() {
+        SceneManager.LoadSceneAsync("LevelSelector");
     }
 	// Update is called once per frame
 	void Update () {
