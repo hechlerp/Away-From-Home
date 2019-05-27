@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour {
 
     public bool isActive = true;
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (!isActive) { return; }
 
@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour {
 	void MoveControlByRigidBody()
 	{
 
-        float TranslateAmount = m_speed * Time.deltaTime;
+        float TranslateAmount = m_speed;
 
         if (Input.GetKey(KeyCode.W)|| Input.GetKey((KeyCode.S))){
             if (Input.GetKey((KeyCode.A))|| Input.GetKey((KeyCode.D))){
@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour {
                 }
             }
             // Use the modifiers to generate a velocity for the RigidBody.
-            rb.velocity = new Vector2(xMod, yMod) * 100f;
+            rb.velocity = new Vector2(xMod, yMod) * 50f * Time.deltaTime;
             setAnimation(animationName);
         }
     }
