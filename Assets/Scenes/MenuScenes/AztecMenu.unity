@@ -164,6 +164,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce0b8e156b90b4b42a218bd685dcc2b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttons:
+  - {fileID: 1575307231}
+  - {fileID: 1886150117}
+  - {fileID: 1237512706}
+  highlighter: {fileID: 2133455187}
 --- !u!1 &871256447
 GameObject:
   m_ObjectHideFlags: 0
@@ -1341,7 +1346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.64334625, g: 0.8207547, b: 0.5458793, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
