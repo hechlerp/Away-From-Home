@@ -13,7 +13,7 @@ public class ExitGame : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyUp(KeyCode.Escape)) {
-             SceneManager.LoadSceneAsync("Menu");
+             SceneManager.LoadSceneAsync("AztecMenu");
         }
 	}
 }
