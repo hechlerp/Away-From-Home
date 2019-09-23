@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
@@ -22,6 +23,19 @@ public class GameManager : MonoBehaviour {
     }
 	// Update is called once per frame
 	void Update () {
-		
+        if (Input.GetKeyUp(KeyCode.BackQuote)) {
+            restartLevel();
+        }
+        if (Input.GetKeyUp(KeyCode.F5)) {
+            saveProgress();
+        }
 	}
+
+    void restartLevel() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    void saveProgress() {
+        ProgressManager.saveProgress(SceneManager.GetActiveScene().name);
+    }
 }
